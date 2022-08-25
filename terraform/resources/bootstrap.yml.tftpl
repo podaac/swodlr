@@ -1,0 +1,52 @@
+#cloud-config
+version: v1
+packages_update: true
+packages_upgrade: true
+
+bootcmd:
+  - curl https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG -o /etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
+  - rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
+
+yum_repos:
+  pgdg-common:
+    name: PostgreSQL common RPMs for RHEL / Rocky 7 - $basearch
+    baseurl: https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-7-$basearch
+    enabled: true
+    gpgcheck: true
+    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
+    repo_gpgcheck: true
+  pgdg14:
+    name: PostgreSQL 14 for RHEL / Rocky 7 - $basearch
+    baseurl: https://download.postgresql.org/pub/repos/yum/14/redhat/rhel-7-$basearch
+    enabled: true
+    gpgcheck: true
+    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
+    repo_gpgcheck: true
+
+packages:
+  - postgresql14
+
+write_files:
+  - path: /root/bootstrap_db.sql
+    encoding: b64
+    permissions: '0600'
+    owner: root:root
+    content: ${bootstrap_db_sql}
+  - path: /root/bootstrap_user.sql
+    permissions: '0600'
+    owner: root:root
+    content: |
+      CREATE USER ${app_username} WITH LOGIN PASSWORD '${app_password}';
+      GRANT ALL PRIVILEGES ON DATABASE swodlr TO ${app_username};
+  - path: /root/.env
+    permissions: '0600'
+    owner: root:root
+    content: |
+      REGION=${region}
+      ENDPOINT=${endpoint}
+      ADMIN_USERNAME=${admin_username}
+  - path: /root/.pgpass
+    permissions: '0600'
+    owner: root:root
+    content: |
+      ${endpoint}:*:${admin_username}:${admin_password}
