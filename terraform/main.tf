@@ -27,6 +27,10 @@ provider "aws" {
     default_tags {
       tags = local.default_tags
     }
+
+    ignore_tags {
+        key_prefixes = ["gsfc-ngap"]
+    }
 }
 
 data "aws_caller_identity" "current" {}

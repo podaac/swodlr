@@ -1,17 +1,6 @@
 /* -- AMI -- */
-data "aws_ami" "amazn2-ami" {
-    most_recent = true
-    owners = ["amazon"]
-
-    filter {
-        name = "name"
-        values = ["amzn2-ami-*"]
-    }
-
-    filter {
-        name = "architecture"
-        values = ["x86_64"]
-    }
+data "aws_ssm_parameter" "ami_id"{
+    name = var.ami_id_ssm_name
 }
 
 /* -- Networking -- */
@@ -53,10 +42,22 @@ data "cloudinit_config" "db_bootstrap" {
     }
 }
 
+/* -- Initialization Check -- */
+data "aws_ssm_parameters_by_path" "swodlr" {
+    path = dirname(local.db_bootstrap_time_ssm_id)
+}
+
+locals {
+    db_bootstrap_time_ssm_id = "/service/swodlr/db-bootstrap-time"
+    db_initalized = contains(data.aws_ssm_parameters_by_path.swodlr.names, local.db_bootstrap_time_ssm_id)
+}
+
 /* -- EC2 -- */
 resource "aws_instance" "db_bootstrap" {
-    ami = data.aws_ami.amazn2-ami.id
-    instance_type = "t2.nano"
+    ami = data.aws_ssm_parameter.ami_id.value
+    instance_type = "t3.micro"
+    iam_instance_profile = "app-instance-default-instance-profile"
+    instance_initiated_shutdown_behavior = "terminate"
     monitoring = false
     tags = {
         Name: "${local.resource_prefix}-db-bootstrap"
@@ -67,6 +68,20 @@ resource "aws_instance" "db_bootstrap" {
         device_index = 0
     }
 
+    count = local.db_initalized ? 0 : 1
     depends_on = [aws_db_instance.database]
     user_data_base64 = data.cloudinit_config.db_bootstrap.rendered
+}
+
+/* -- Store bootstrap metadata -- */
+resource "aws_ssm_parameter" "bootstrap_time" {
+    name = "/service/swodlr/db-bootstrap-time"
+    description = "Timestamp of when the database bootstrap instance was launched"
+    depends_on = [aws_instance.db_bootstrap]
+    type = "String"
+    value = timestamp()
+
+    lifecycle {
+        ignore_changes = [value]
+    }
 }

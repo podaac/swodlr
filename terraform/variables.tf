@@ -16,10 +16,7 @@ variable "region" {
     type = string
 }
 
-variable "vpc_id" {
-    type = string
-}
-
-variable "private_subnets" {
-    type = list(string)
+variable "ami_id_ssm_name" {
+    default = "	image_id_amz2"
+    description = "Name of the SSM Parameter that contains the NGAP approved ECS AMI ID."
 }
