@@ -60,6 +60,11 @@ resource "aws_instance" "db_bootstrap" {
         Name: "${local.resource_prefix}-db-bootstrap"
     }
 
+    lifecycle {
+        # Instance should terminate itself after bootstrapping
+        prevent_destroy = true
+    }
+
     network_interface {
         network_interface_id = aws_network_interface.db_bootstrap.id
         device_index = 0
