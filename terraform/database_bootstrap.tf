@@ -4,10 +4,6 @@ data "aws_ssm_parameter" "ami_id"{
 }
 
 /* -- Networking -- */
-locals {
-    bootstrap_private_subnet = values(data.aws_subnet.private)
-}
-
 resource "aws_network_interface" "db_bootstrap" {
     subnet_id = values(data.aws_subnet.private)[0].id
     security_groups = [aws_security_group.database.id]
@@ -22,9 +18,10 @@ data "cloudinit_config" "db_bootstrap" {
         content = templatefile(
             "${path.module}/resources/bootstrap.yml.tftpl",
             {
-                bootstrap_db_sql = filebase64("${path.module}/../database/bootstrap_db.sql")
+                schema_sql = filebase64("${path.module}/../database/schema.sql")
 
                 region = var.region
+                db_name = var.db_name
                 endpoint = aws_db_instance.database.endpoint
 
                 admin_username = aws_ssm_parameter.admin_username.value

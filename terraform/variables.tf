@@ -3,6 +3,11 @@ variable "app_name" {
     type = string
 }
 
+variable "db_name" {
+    default = "swodlr"
+    type = string
+}
+
 variable "default_tags" {
     type = map(string)
     default = {}
