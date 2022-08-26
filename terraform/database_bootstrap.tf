@@ -63,6 +63,7 @@ resource "aws_instance" "db_bootstrap" {
     lifecycle {
         # Instance should terminate itself after bootstrapping
         prevent_destroy = true
+        ignore_changes = all
     }
 
     network_interface {
