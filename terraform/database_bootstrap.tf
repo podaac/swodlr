@@ -1,5 +1,5 @@
 /* -- AMI -- */
-data "aws_ssm_parameter" "ami_id"{
+data "aws_ssm_parameter" "ami_id" {
     name = var.ami_id_ssm_name
 }
 

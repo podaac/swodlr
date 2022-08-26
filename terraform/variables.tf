@@ -22,6 +22,6 @@ variable "region" {
 }
 
 variable "ami_id_ssm_name" {
-    default = "	image_id_amz2"
+    default = "image_id_amz2"
     description = "Name of the SSM Parameter that contains the NGAP approved ECS AMI ID."
 }
