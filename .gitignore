@@ -31,3 +31,10 @@ bin/
 
 # VS Code
 .vscode/
+.project
+
+# Terraform
+.terraform
+
+# MacOS
+.DS_Store
