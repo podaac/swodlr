@@ -6,9 +6,10 @@ CREATE TABLE "L2RasterProducts" (
 );
 
 CREATE TABLE "ProductHistory" (
-    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    "requestedBy" uuid NOT NULL,
-    "rasterProduct" uuid NOT NULL
+    "requestedBy" uuid,
+    "rasterProduct" uuid,
+    "timestamp" timestamp with time zone NOT NULL DEFAULT current_timestamp,
+    PRIMARY KEY ("requestedBy", "rasterProduct")
 );
 
 CREATE TABLE "RasterDefinitions" (
