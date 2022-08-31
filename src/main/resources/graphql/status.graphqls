@@ -1,0 +1,6 @@
+type Status {
+    id: ID!
+    product: RasterProduct!
+    timestamp: String!
+    status: String!
+}

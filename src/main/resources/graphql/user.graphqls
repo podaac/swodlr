@@ -1,0 +1,4 @@
+type User {
+    id: ID!
+    products(startingFrom: ID, limit: Int = 10): [Product!]
+}

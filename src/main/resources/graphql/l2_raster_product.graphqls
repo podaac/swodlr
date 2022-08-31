@@ -1,0 +1,5 @@
+type L2RasterProduct {
+    id: ID!
+    definition: RasterDefinition!
+    status(limit: Int = 10): [Status!]!
+}
