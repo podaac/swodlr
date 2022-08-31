@@ -19,7 +19,7 @@ CREATE TABLE "Status" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     "productID" uuid NOT NULL,
     "previousStatus" uuid,
-    "timestamp" timestamp NOT NULL DEFAULT current_timestamp,
+    "timestamp" timestamp with time zone NOT NULL DEFAULT current_timestamp,
     "status" text NOT NULL
 );
 
