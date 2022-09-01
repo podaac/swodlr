@@ -14,6 +14,8 @@ public class ProductHistoryID implements Serializable {
     @Column
     private UUID rasterProduct;
 
+    public ProductHistoryID() { }
+
     public ProductHistoryID(UUID requestedBy, UUID rasterProduct) {
         this.requestedBy = requestedBy;
         this.rasterProduct = rasterProduct;

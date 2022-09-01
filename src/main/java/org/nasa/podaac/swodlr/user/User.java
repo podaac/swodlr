@@ -4,8 +4,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -18,7 +16,6 @@ import org.nasa.podaac.swodlr.l2_raster_product.L2RasterProduct;
 @Table(name="Users")
 public class User {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private UUID id;
 
     @ManyToMany
@@ -29,7 +26,7 @@ public class User {
     )
     Set<L2RasterProduct> productHistory;
     
-    public UUID getUUID() {
+    public UUID getID() {
         return id;
     }
 }
