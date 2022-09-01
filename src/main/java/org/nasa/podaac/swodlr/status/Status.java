@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="Status")
-public class Status {
+public class Status implements StatusView {
     @Id
     private UUID id;
 
