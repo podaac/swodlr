@@ -31,12 +31,12 @@ CREATE TABLE "Users" (
 -- Create references
 ALTER TABLE "L2RasterProducts"
     ADD FOREIGN KEY ("definition") REFERENCES "RasterDefinitions" (id),
-    ADD FOREIGN KEY ("currentStatus") REFERENCES "Status" (id);
+    ADD FOREIGN KEY ("currentStatus") REFERENCES "Status" (id) DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE "ProductHistory"
     ADD FOREIGN KEY ("requestedBy") REFERENCES "Users" (id),
     ADD FOREIGN KEY ("rasterProduct") REFERENCES "L2RasterProducts" (id);
 
 ALTER TABLE "Status"
-    ADD FOREIGN KEY ("productID") REFERENCES "L2RasterProducts" (id),
+    ADD FOREIGN KEY ("productID") REFERENCES "L2RasterProducts" (id) DEFERRABLE INITIALLY DEFERRED,
     ADD FOREIGN KEY ("previousStatus") REFERENCES "Status" (id);
