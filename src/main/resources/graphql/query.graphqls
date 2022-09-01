@@ -3,5 +3,5 @@ type Query {
     statusByProduct(product: ID!, limit: Int = 10): [Status!]
     statusByPrevious(startingFrom: ID!, limit: Int = 10): [Status!]
     # TODO: Create filters for definitions based on schema
-    definitions: [RasterDefinition!]
+    rasterDefinitions: [RasterDefinition!]
 }
