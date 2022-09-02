@@ -19,7 +19,6 @@ CREATE TABLE "RasterDefinitions" (
 CREATE TABLE "Status" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     "productID" uuid NOT NULL,
-    "previousStatus" uuid,
     "timestamp" timestamp with time zone NOT NULL DEFAULT current_timestamp,
     "status" text NOT NULL
 );
@@ -38,5 +37,4 @@ ALTER TABLE "ProductHistory"
     ADD FOREIGN KEY ("rasterProduct") REFERENCES "L2RasterProducts" (id);
 
 ALTER TABLE "Status"
-    ADD FOREIGN KEY ("productID") REFERENCES "L2RasterProducts" (id) DEFERRABLE INITIALLY DEFERRED,
-    ADD FOREIGN KEY ("previousStatus") REFERENCES "Status" (id);
+    ADD FOREIGN KEY ("productID") REFERENCES "L2RasterProducts" (id) DEFERRABLE INITIALLY DEFERRED;
