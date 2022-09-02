@@ -1,4 +1,4 @@
-package org.nasa.podaac.swodlr.user;
+package gov.nasa.podaac.swodlr.user;
 
 import java.util.UUID;
 

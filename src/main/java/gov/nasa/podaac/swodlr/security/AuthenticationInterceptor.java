@@ -1,16 +1,16 @@
-package org.nasa.podaac.swodlr.security;
+package gov.nasa.podaac.swodlr.security;
 
 import java.util.Collections;
 import java.util.UUID;
 
-import org.nasa.podaac.swodlr.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.server.WebGraphQlInterceptor;
 import org.springframework.graphql.server.WebGraphQlRequest;
 import org.springframework.graphql.server.WebGraphQlResponse;
 import org.springframework.stereotype.Component;
-
 import reactor.core.publisher.Mono;
+
+import gov.nasa.podaac.swodlr.user.UserRepository;
 
 @Component
 public class AuthenticationInterceptor implements WebGraphQlInterceptor {

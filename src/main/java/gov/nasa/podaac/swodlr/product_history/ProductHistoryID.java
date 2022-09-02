@@ -1,8 +1,7 @@
-package org.nasa.podaac.swodlr.product_history;
+package gov.nasa.podaac.swodlr.product_history;
 
 import java.io.Serializable;
 import java.util.UUID;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 

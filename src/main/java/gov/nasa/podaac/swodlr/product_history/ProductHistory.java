@@ -1,7 +1,6 @@
-package org.nasa.podaac.swodlr.product_history;
+package gov.nasa.podaac.swodlr.product_history;
 
 import java.util.UUID;
-
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;

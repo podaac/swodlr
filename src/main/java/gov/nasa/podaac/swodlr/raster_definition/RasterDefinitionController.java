@@ -1,12 +1,13 @@
-package org.nasa.podaac.swodlr.raster_definition;
+package gov.nasa.podaac.swodlr.raster_definition;
 
 import java.util.List;
 
-import org.nasa.podaac.swodlr.l2_raster_product.L2RasterProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
+
+import gov.nasa.podaac.swodlr.l2_raster_product.L2RasterProduct;
 
 @Controller
 public class RasterDefinitionController {

@@ -1,4 +1,4 @@
-package org.nasa.podaac.swodlr.user;
+package gov.nasa.podaac.swodlr.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.ContextValue;

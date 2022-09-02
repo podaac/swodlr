@@ -1,9 +1,8 @@
-package org.nasa.podaac.swodlr.status;
+package gov.nasa.podaac.swodlr.status;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;

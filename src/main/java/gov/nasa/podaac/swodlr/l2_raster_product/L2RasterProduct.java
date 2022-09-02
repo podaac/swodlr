@@ -1,4 +1,4 @@
-package org.nasa.podaac.swodlr.l2_raster_product;
+package gov.nasa.podaac.swodlr.l2_raster_product;
 
 import java.util.Set;
 import java.util.UUID;
@@ -11,7 +11,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import org.nasa.podaac.swodlr.user.User;
+import gov.nasa.podaac.swodlr.user.User;
 
 @Entity
 @Table(name="L2RasterProducts")

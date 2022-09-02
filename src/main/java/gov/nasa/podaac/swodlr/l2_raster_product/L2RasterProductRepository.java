@@ -1,12 +1,12 @@
-package org.nasa.podaac.swodlr.l2_raster_product;
+package gov.nasa.podaac.swodlr.l2_raster_product;
 
 import java.util.List;
 import java.util.UUID;
 
-import org.nasa.podaac.swodlr.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import gov.nasa.podaac.swodlr.user.User;
 
 public interface L2RasterProductRepository extends JpaRepository<L2RasterProduct, UUID> {
     @Query(

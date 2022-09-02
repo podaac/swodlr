@@ -1,4 +1,4 @@
-package org.nasa.podaac.swodlr.status;
+package gov.nasa.podaac.swodlr.status;
 
 import java.util.List;
 import java.util.UUID;

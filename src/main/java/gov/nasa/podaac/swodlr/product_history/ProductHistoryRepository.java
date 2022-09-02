@@ -1,4 +1,4 @@
-package org.nasa.podaac.swodlr.product_history;
+package gov.nasa.podaac.swodlr.product_history;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

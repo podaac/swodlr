@@ -1,8 +1,7 @@
-package org.nasa.podaac.swodlr.user;
+package gov.nasa.podaac.swodlr.user;
 
 import java.util.Set;
 import java.util.UUID;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -10,7 +9,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import org.nasa.podaac.swodlr.l2_raster_product.L2RasterProduct;
+import gov.nasa.podaac.swodlr.l2_raster_product.L2RasterProduct;
 
 @Entity
 @Table(name="Users")
