@@ -11,7 +11,7 @@ public interface StatusRepository extends JpaRepository<Status, UUID> {
         value="""
             SELECT * FROM \"Status\"
             WHERE \"productID\" = :#{#productID}
-            ORDER BY \"timestamp\" DESC LIMIT :#{#limit}
+            ORDER BY timestamp DESC LIMIT :#{#limit}
         """,
         nativeQuery=true
     )
@@ -19,11 +19,14 @@ public interface StatusRepository extends JpaRepository<Status, UUID> {
 
     @Query(
         value="""
-            SELECT CAST(id,  AS VARCHAR) * FROM Status
-            WHERE (id, productID) >= (:#{#productID}, :#{#startingID})
-            ORDER BY ProductHistory.timestamp DESC LIMIT :#{#limit}
+            SELECT * FROM \"Status\"
+            WHERE 
+                \"productID\" = (SELECT \"productID\" FROM \"Status\" WHERE id = :#{#after})
+                AND
+                (timestamp, id) < (SELECT timestamp, id FROM \"Status\" WHERE id = :#{#after})
+            ORDER BY timestamp DESC, id DESC LIMIT :#{#limit}
         """,
         nativeQuery=true
     )
-    List<StatusView> findViewsByProductIDStartingWith(UUID startingID, UUID productID, int limit);
+    List<Status> findViewsAfterID(UUID after, int limit);
 }

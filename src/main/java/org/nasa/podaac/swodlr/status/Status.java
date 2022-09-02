@@ -11,15 +11,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="Status")
-public class Status implements StatusView {
+public class Status {
     @Id
     private UUID id;
 
     @Column(nullable=false)
     private UUID productID;
-
-    @Column
-    private UUID previousStatus;
 
     @Column(nullable=false)
     private Timestamp timestamp;
@@ -47,15 +44,6 @@ public class Status implements StatusView {
 
     public Status setProductID(UUID productID) {
         this.productID = productID;
-        return this;
-    }
-
-    public UUID getPreviousStatus() {
-        return previousStatus;
-    }
-
-    public Status setPreviousStatus(UUID previousStatus) {
-        this.previousStatus = previousStatus;
         return this;
     }
 
