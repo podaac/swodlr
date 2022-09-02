@@ -24,9 +24,11 @@ public interface L2RasterProductRepository extends JpaRepository<L2RasterProduct
         value="""
             SELECT \"L2RasterProducts\".* FROM \"L2RasterProducts\"
             JOIN \"ProductHistory\" ON \"ProductHistory\".\"rasterProduct\" = \"L2RasterProducts\".id
-            WHERE (\"ProductHistory\".timestamp, \"ProductHistory\".\"requestedBy\")
-                < (SELECT timestamp, \"requestedBy\" FROM \"ProductHistory\" WHERE \"requestedBy\" = :#{#user.getID()} AND \"rasterProduct\" = :#{#after})
-            ORDER BY \"ProductHistory\".timestamp DESC, \"ProductHistory\".\"requestedBy\" LIMIT :#{#limit}
+            WHERE
+                \"ProductHistory\".\"requestedBy\" = :#{#user.getID()}
+                AND
+                (\"ProductHistory\".timestamp, \"ProductHistory\".\"rasterProduct\") < (SELECT timestamp, \"rasterProduct\" FROM \"ProductHistory\" WHERE \"requestedBy\" = :#{#user.getID()} AND \"rasterProduct\" = :#{#after})
+            ORDER BY \"ProductHistory\".timestamp DESC, \"ProductHistory\".\"rasterProduct\" DESC LIMIT :#{#limit}
         """,
         nativeQuery=true
     )
