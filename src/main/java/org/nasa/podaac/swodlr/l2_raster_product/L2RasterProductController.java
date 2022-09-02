@@ -1,5 +1,6 @@
 package org.nasa.podaac.swodlr.l2_raster_product;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.nasa.podaac.swodlr.status.Status;
@@ -31,5 +32,14 @@ public class L2RasterProductController {
             throw new RuntimeException("Product not found");
 
         return result.get();
+    }
+
+    @SchemaMapping(typeName="User", field="products")
+    public List<L2RasterProduct> User_products(@ContextValue User user, @Argument UUID after, @Argument int limit) {
+        if (after == null) {
+            return l2RasterProductRepository.findByUser(user, limit);
+        } else {
+            return l2RasterProductRepository.findByUser(user, after, limit);
+        }
     }
 }

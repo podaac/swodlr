@@ -11,10 +11,10 @@ import org.springframework.data.jpa.repository.Query;
 public interface L2RasterProductRepository extends JpaRepository<L2RasterProduct, UUID> {
     @Query(
         value="""
-            SELECT L2RasterProducts.* FROM L2RasterProducts
-            JOIN ProductHistory ON ProductHistory.rasterProduct = L2RasterProducts.id
-            WHERE ProductHistory.requestedBy = :#{#user.id}
-            ORDER BY ProductHistory.timestamp DESC LIMIT :#{#limit}
+            SELECT \"L2RasterProducts\".* FROM \"L2RasterProducts\"
+            JOIN \"ProductHistory\" ON \"ProductHistory\".\"rasterProduct\" = \"L2RasterProducts\".id
+            WHERE \"ProductHistory\".\"requestedBy\" = :#{#user.getID()}
+            ORDER BY \"ProductHistory\".timestamp DESC LIMIT :#{#limit}
         """,
         nativeQuery=true
     )
@@ -22,11 +22,11 @@ public interface L2RasterProductRepository extends JpaRepository<L2RasterProduct
 
     @Query(
         value="""
-            SELECT L2RasterProducts.* FROM L2RasterProducts
-            JOIN ProductHistory ON ProductHistory.rasterProduct = L2RasterProducts.id
-            WHERE ProductHistory.requestedBy = :#{#user.id}
-            ORDER BY ProductHistory.timestamp DEC LIMIT :#{#limit}
-            OFFSET :#{#after}
+            SELECT \"L2RasterProducts\".* FROM \"L2RasterProducts\"
+            JOIN \"ProductHistory\" ON \"ProductHistory\".\"rasterProduct\" = \"L2RasterProducts\".id
+            WHERE (\"ProductHistory\".timestamp, \"ProductHistory\".\"requestedBy\")
+                < (SELECT timestamp, \"requestedBy\" FROM \"ProductHistory\" WHERE \"requestedBy\" = :#{#user.getID()} AND \"rasterProduct\" = :#{#after})
+            ORDER BY \"ProductHistory\".timestamp DESC, \"ProductHistory\".\"requestedBy\" LIMIT :#{#limit}
         """,
         nativeQuery=true
     )
