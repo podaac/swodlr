@@ -23,7 +23,7 @@ public interface StatusRepository extends JpaRepository<Status, UUID> {
             WHERE 
                 \"productID\" = (SELECT \"productID\" FROM \"Status\" WHERE id = :#{#after})
                 AND
-                (timestamp, id) < (SELECT timestamp, id FROM \"Status\" WHERE id = :#{#after})
+                (timestamp, id) <= (SELECT timestamp, id FROM \"Status\" WHERE id = :#{#after})
             ORDER BY timestamp DESC, id DESC LIMIT :#{#limit}
         """,
         nativeQuery=true
