@@ -1,3 +1,9 @@
+-- Create types
+CREATE TYPE state AS ENUM (
+    'NEW', 'UNAVAILABLE', 'GENERATING',
+    'ERROR', 'READY', 'AVAILABLE'
+);
+
 -- Create tables
 CREATE TABLE "L2RasterProducts" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -20,7 +26,8 @@ CREATE TABLE "Status" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     "productID" uuid NOT NULL,
     "timestamp" timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    "status" text NOT NULL
+    "state" state NOT NULL,
+    "reason" text
 );
 
 CREATE TABLE "Users" (

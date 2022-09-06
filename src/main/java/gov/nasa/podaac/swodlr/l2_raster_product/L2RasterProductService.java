@@ -13,6 +13,7 @@ import gov.nasa.podaac.swodlr.raster_definition.RasterDefinition;
 import gov.nasa.podaac.swodlr.raster_definition.RasterDefinitionRepository;
 import gov.nasa.podaac.swodlr.status.Status;
 import gov.nasa.podaac.swodlr.status.StatusRepository;
+import gov.nasa.podaac.swodlr.status.state.State;
 import gov.nasa.podaac.swodlr.user.User;
 
 @Service
@@ -36,7 +37,7 @@ public class L2RasterProductService {
             throw new RuntimeException("Definition not found"); // TODO: Move to own class?
 
         RasterDefinition definition = queryResult.get();
-        Status status = new Status("Initial creation");
+        Status status = new Status(State.NEW);
         L2RasterProduct product = new L2RasterProduct(definition.getID());
         ProductHistory history = new ProductHistory(product.getID(), user.getID());
 

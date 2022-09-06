@@ -5,8 +5,14 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
+
+import gov.nasa.podaac.swodlr.status.state.State;
 
 @Entity
 @Table(name="Status")
@@ -21,16 +27,26 @@ public class Status {
     private Timestamp timestamp;
 
     @Column(nullable=false)
-    private String status;
+    @Type(type="gov.nasa.podaac.swodlr.status.state.StateType")
+    @Enumerated(EnumType.STRING)
+    private State state;
+
+    @Column
+    private String reason;
 
     public Status() {
         this(null);
     }
 
-    public Status(String status) {
+    public Status(State state) {
+        this(state, null);
+    }
+
+    public Status(State state, String reason) {
         this.id = UUID.randomUUID();
         this.timestamp = Timestamp.valueOf(LocalDateTime.now());
-        this.status = status;
+        this.state = state;
+        this.reason = reason;
     }
 
     public UUID getID() {
@@ -50,7 +66,11 @@ public class Status {
         return timestamp;
     }
 
-    public String getStatus() {
-        return status;
+    public State getState() {
+        return state;
+    }
+
+    public String getReason() {
+        return reason;
     }
 }
