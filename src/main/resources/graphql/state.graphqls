@@ -1,0 +1,8 @@
+enum State {
+    NEW
+    UNAVAILABLE
+    GENERATING
+    ERROR
+    READY
+    AVAILABLE
+}
