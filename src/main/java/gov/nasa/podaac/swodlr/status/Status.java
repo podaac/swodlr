@@ -28,7 +28,6 @@ public class Status {
 
     @Column(nullable=false)
     @Type(type="gov.nasa.podaac.swodlr.status.state.StateType")
-    @Enumerated(EnumType.STRING)
     private State state;
 
     @Column
