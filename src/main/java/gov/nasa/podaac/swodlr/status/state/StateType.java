@@ -66,12 +66,11 @@ public class StateType implements UserType {
 
     @Override
     public Object assemble(Serializable cached, Object owner) throws HibernateException {
-        return (State) cached;
+        return cached;
     }
 
     @Override
     public Object replace(Object original, Object target, Object owner) throws HibernateException {
         return original;
     }
-    
 }
