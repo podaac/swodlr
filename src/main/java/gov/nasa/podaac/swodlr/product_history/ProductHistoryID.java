@@ -1,11 +1,10 @@
 package gov.nasa.podaac.swodlr.product_history;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-
-import graphql.com.google.common.base.Objects;
 
 @Embeddable
 public class ProductHistoryID implements Serializable {
@@ -36,11 +35,11 @@ public class ProductHistoryID implements Serializable {
             return false;
         
         ProductHistoryID other = (ProductHistoryID) x;
-        return requestedBy.equals(other.requestedBy) && rasterProduct.equals(other.rasterProduct);
+        return Objects.equals(requestedBy, other.requestedBy) && Objects.equals(rasterProduct, other.rasterProduct);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(requestedBy, rasterProduct);
+        return Objects.hash(requestedBy, rasterProduct);
     }
 }
