@@ -27,12 +27,12 @@ public class L2RasterProductController {
     }
 
     @SchemaMapping(typeName="Status", field="product")
-    public L2RasterProduct Status_product(Status status) {
+    public L2RasterProduct statusProduct(Status status) {
         return status.getProduct();
     }
 
     @SchemaMapping(typeName="User", field="products")
-    public List<L2RasterProduct> User_products(@ContextValue User user, @Argument UUID after, @Argument int limit) {
+    public List<L2RasterProduct> userProducts(@ContextValue User user, @Argument UUID after, @Argument int limit) {
         if (after == null) {
             return l2RasterProductRepository.findByUser(user, limit);
         } else {

@@ -20,7 +20,7 @@ public class RasterDefinitionController {
     }
 
     @SchemaMapping(typeName="L2RasterProduct", field="definition")
-    RasterDefinition L2RasterProduct_definition(L2RasterProduct rasterProduct) {
+    RasterDefinition l2RasterProductDefinition(L2RasterProduct rasterProduct) {
         return rasterProduct.getDefinition();
     }
 }
