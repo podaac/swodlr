@@ -8,7 +8,7 @@ import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
 
 @Component
-public class SwodlrExceptionHandler extends DataFetcherExceptionResolverAdapter {
+public class SwodlrExceptionResolver extends DataFetcherExceptionResolverAdapter {
     @Override
     public GraphQLError resolveToSingleError(Throwable ex, DataFetchingEnvironment env) {
         if (!(ex instanceof SwodlrException))
