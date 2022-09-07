@@ -29,7 +29,7 @@ public class L2RasterProduct {
     @JoinTable(
         name="ProductHistory",
         joinColumns=@JoinColumn(name="rasterProduct"),
-        inverseJoinColumns=@JoinColumn(name="requesetedBy")
+        inverseJoinColumns=@JoinColumn(name="requestedBy")
     )
     private Set<User> user;
 
