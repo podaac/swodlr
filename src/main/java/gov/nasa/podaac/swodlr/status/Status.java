@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -13,7 +15,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 
 import gov.nasa.podaac.swodlr.l2_raster_product.L2RasterProduct;
-import gov.nasa.podaac.swodlr.status.state.State;
 
 @Entity
 @Table(name="Status")
@@ -29,7 +30,7 @@ public class Status {
     private Timestamp timestamp;
 
     @Column(nullable=false)
-    @Type(type="gov.nasa.podaac.swodlr.status.state.StateType")
+    @Enumerated(EnumType.STRING)
     private State state;
 
     @Column

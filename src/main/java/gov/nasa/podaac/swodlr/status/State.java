@@ -1,4 +1,4 @@
-package gov.nasa.podaac.swodlr.status.state;
+package gov.nasa.podaac.swodlr.status;
 
 import java.util.HashMap;
 import java.util.Map;

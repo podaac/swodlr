@@ -12,9 +12,9 @@ import gov.nasa.podaac.swodlr.product_history.ProductHistory;
 import gov.nasa.podaac.swodlr.product_history.ProductHistoryRepository;
 import gov.nasa.podaac.swodlr.raster_definition.RasterDefinition;
 import gov.nasa.podaac.swodlr.raster_definition.RasterDefinitionRepository;
+import gov.nasa.podaac.swodlr.status.State;
 import gov.nasa.podaac.swodlr.status.Status;
 import gov.nasa.podaac.swodlr.status.StatusRepository;
-import gov.nasa.podaac.swodlr.status.state.State;
 import gov.nasa.podaac.swodlr.user.User;
 
 @Service
