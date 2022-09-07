@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import gov.nasa.podaac.swodlr.exception.SwodlrException;
 import gov.nasa.podaac.swodlr.product_history.ProductHistory;
 import gov.nasa.podaac.swodlr.product_history.ProductHistoryRepository;
 import gov.nasa.podaac.swodlr.raster_definition.RasterDefinition;
@@ -34,7 +35,7 @@ public class L2RasterProductService {
     public L2RasterProduct createL2RasterProduct(User user, UUID definitionID) {
         var queryResult = rasterDefinitionRepository.findById(definitionID);
         if (!queryResult.isPresent())
-            throw new RuntimeException("Definition not found"); // TODO: Move to own class?
+            throw new SwodlrException("Definition not found");
 
         RasterDefinition definition = queryResult.get();
         Status status = new Status(State.NEW);

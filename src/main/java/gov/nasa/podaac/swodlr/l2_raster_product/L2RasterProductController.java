@@ -10,6 +10,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+import gov.nasa.podaac.swodlr.exception.SwodlrException;
 import gov.nasa.podaac.swodlr.status.Status;
 import gov.nasa.podaac.swodlr.user.User;
 
@@ -30,7 +31,7 @@ public class L2RasterProductController {
     public L2RasterProduct Status_product(Status status) {
         var result = l2RasterProductRepository.findById(status.getProductID());
         if (!result.isPresent())
-            throw new RuntimeException("Product not found");
+            throw new SwodlrException("Product not found");
 
         return result.get();
     }
