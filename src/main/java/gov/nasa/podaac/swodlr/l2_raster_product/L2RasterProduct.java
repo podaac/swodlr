@@ -3,14 +3,17 @@ package gov.nasa.podaac.swodlr.l2_raster_product;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import gov.nasa.podaac.swodlr.raster_definition.RasterDefinition;
+import gov.nasa.podaac.swodlr.status.Status;
 import gov.nasa.podaac.swodlr.user.User;
 
 @Entity
@@ -19,11 +22,12 @@ public class L2RasterProduct {
     @Id
     private UUID id;
 
-    @Column(nullable=false)
-    private UUID definition;
+    @ManyToOne(optional=false)
+    @JoinColumn(name="definitionID", nullable=false)
+    private RasterDefinition definition;
 
-    @Column(nullable=false)
-    private UUID currentStatus;
+    @OneToMany(mappedBy="product")
+    private Set<Status> statuses;
 
     @ManyToMany
     @JoinTable(
@@ -31,29 +35,20 @@ public class L2RasterProduct {
         joinColumns=@JoinColumn(name="rasterProduct"),
         inverseJoinColumns=@JoinColumn(name="requestedBy")
     )
-    private Set<User> user;
+    private Set<User> users;
 
     public L2RasterProduct() { }
 
-    public L2RasterProduct(UUID definitionID) {
+    public L2RasterProduct(RasterDefinition definition) {
         this.id = UUID.randomUUID();
-        this.definition = definitionID;
+        this.definition = definition;
     }
 
     public UUID getID() {
         return id;
     }
 
-    public UUID getDefinition() {
+    public RasterDefinition getDefinition() {
         return definition;
-    }
-
-    public UUID getCurrentStatus() {
-        return currentStatus;
-    }
-
-    public L2RasterProduct setCurrentStatus(UUID currentStatus) {
-        this.currentStatus = currentStatus;
-        return this;
     }
 }

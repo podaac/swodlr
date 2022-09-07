@@ -12,8 +12,8 @@ public interface L2RasterProductRepository extends JpaRepository<L2RasterProduct
     @Query(
         value="""
             SELECT \"L2RasterProducts\".* FROM \"L2RasterProducts\"
-            JOIN \"ProductHistory\" ON \"ProductHistory\".\"rasterProduct\" = \"L2RasterProducts\".id
-            WHERE \"ProductHistory\".\"requestedBy\" = :#{#user.getID()}
+            JOIN \"ProductHistory\" ON \"ProductHistory\".\"rasterProductID\" = \"L2RasterProducts\".id
+            WHERE \"ProductHistory\".\"requestedByID\" = :#{#user.getID()}
             ORDER BY \"ProductHistory\".timestamp DESC LIMIT :#{#limit}
         """,
         nativeQuery=true
@@ -23,16 +23,16 @@ public interface L2RasterProductRepository extends JpaRepository<L2RasterProduct
     @Query(
         value="""
             SELECT \"L2RasterProducts\".* FROM \"L2RasterProducts\"
-            JOIN \"ProductHistory\" ON \"ProductHistory\".\"rasterProduct\" = \"L2RasterProducts\".id
+            JOIN \"ProductHistory\" ON \"ProductHistory\".\"rasterProductID\" = \"L2RasterProducts\".id
             WHERE
-                \"ProductHistory\".\"requestedBy\" = :#{#user.getID()}
+                \"ProductHistory\".\"requestedByID\" = :#{#user.getID()}
                 AND
-                (\"ProductHistory\".timestamp, \"ProductHistory\".\"rasterProduct\") <= (SELECT timestamp, \"rasterProduct\" FROM \"ProductHistory\" WHERE \"requestedBy\" = :#{#user.getID()} AND \"rasterProduct\" = :#{#after})
-            ORDER BY \"ProductHistory\".timestamp DESC, \"ProductHistory\".\"rasterProduct\" DESC LIMIT :#{#limit}
+                (\"ProductHistory\".timestamp, \"ProductHistory\".\"rasterProductID\") <= (SELECT timestamp, \"rasterProductID\" FROM \"ProductHistory\" WHERE \"requestedByID\" = :#{#user.getID()} AND \"rasterProductID\" = :#{#after})
+            ORDER BY \"ProductHistory\".timestamp DESC, \"ProductHistory\".\"rasterProductID\" DESC LIMIT :#{#limit}
         """,
         nativeQuery=true
     )
     List<L2RasterProduct> findByUser(User user, UUID after, int limit);
 
-    int countByUser(User user);
+    List<L2RasterProduct> findById(L2RasterProduct product);
 }

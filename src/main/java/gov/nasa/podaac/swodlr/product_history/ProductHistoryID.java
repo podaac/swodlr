@@ -2,30 +2,35 @@ package gov.nasa.podaac.swodlr.product_history;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.UUID;
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import gov.nasa.podaac.swodlr.l2_raster_product.L2RasterProduct;
+import gov.nasa.podaac.swodlr.user.User;
 
 @Embeddable
 public class ProductHistoryID implements Serializable {
-    @Column
-    private UUID requestedBy;
+    @ManyToOne(optional=false)
+    @JoinColumn(name="requestedByID", nullable=false)
+    private User requestedBy;
 
-    @Column
-    private UUID rasterProduct;
+    @ManyToOne(optional=false)
+    @JoinColumn(name="rasterProductID", nullable=false)
+    private L2RasterProduct rasterProduct;
 
     public ProductHistoryID() { }
 
-    public ProductHistoryID(UUID requestedBy, UUID rasterProduct) {
+    public ProductHistoryID(User requestedBy, L2RasterProduct rasterProduct) {
         this.requestedBy = requestedBy;
         this.rasterProduct = rasterProduct;
     }
 
-    public UUID getRequestedByID() {
+    public User getRequestedBy() {
         return requestedBy;
     }
 
-    public UUID getRasterProductID() {
+    public L2RasterProduct getRasterProduct() {
         return rasterProduct;
     }
 
@@ -35,11 +40,11 @@ public class ProductHistoryID implements Serializable {
             return false;
         
         ProductHistoryID other = (ProductHistoryID) x;
-        return Objects.equals(requestedBy, other.requestedBy) && Objects.equals(rasterProduct, other.rasterProduct);
+        return Objects.equals(requestedBy.getID(), other.requestedBy.getID()) && Objects.equals(rasterProduct.getID(), other.rasterProduct.getID());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestedBy, rasterProduct);
+        return Objects.hash(requestedBy.getID(), rasterProduct.getID());
     }
 }

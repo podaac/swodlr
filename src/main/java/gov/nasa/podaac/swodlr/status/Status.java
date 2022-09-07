@@ -6,10 +6,13 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
+import gov.nasa.podaac.swodlr.l2_raster_product.L2RasterProduct;
 import gov.nasa.podaac.swodlr.status.state.State;
 
 @Entity
@@ -18,8 +21,9 @@ public class Status {
     @Id
     private UUID id;
 
-    @Column(nullable=false)
-    private UUID productID;
+    @ManyToOne(optional=false)
+    @JoinColumn(name="productID", nullable=false)
+    private L2RasterProduct product;
 
     @Column(nullable=false)
     private Timestamp timestamp;
@@ -50,12 +54,12 @@ public class Status {
         return id;
     }
 
-    public UUID getProductID() {
-        return productID;
+    public L2RasterProduct getProduct() {
+        return product;
     }
 
-    public Status setProductID(UUID productID) {
-        this.productID = productID;
+    public Status setProduct(L2RasterProduct product) {
+        this.product = product;
         return this;
     }
 

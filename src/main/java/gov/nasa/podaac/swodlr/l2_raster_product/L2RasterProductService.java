@@ -39,11 +39,10 @@ public class L2RasterProductService {
 
         RasterDefinition definition = queryResult.get();
         Status status = new Status(State.NEW);
-        L2RasterProduct product = new L2RasterProduct(definition.getID());
-        ProductHistory history = new ProductHistory(product.getID(), user.getID());
+        L2RasterProduct product = new L2RasterProduct(definition);
+        ProductHistory history = new ProductHistory(user, product);
 
-        status.setProductID(product.getID());
-        product.setCurrentStatus(status.getID());
+        status.setProduct(product);
 
         product = l2RasterProductRepository.save(product);
         statusRepository.save(status);

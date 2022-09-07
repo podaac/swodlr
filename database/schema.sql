@@ -7,15 +7,14 @@ CREATE TYPE state AS ENUM (
 -- Create tables
 CREATE TABLE "L2RasterProducts" (
     "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    "definition" uuid NOT NULL,
-    "currentStatus" uuid NOT NULL
+    "definitionID" uuid NOT NULL
 );
 
 CREATE TABLE "ProductHistory" (
-    "requestedBy" uuid,
-    "rasterProduct" uuid,
+    "requestedByID" uuid,
+    "rasterProductID" uuid,
     "timestamp" timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    PRIMARY KEY ("requestedBy", "rasterProduct")
+    PRIMARY KEY ("requestedByID", "rasterProductID")
 );
 
 CREATE TABLE "RasterDefinitions" (
@@ -36,12 +35,11 @@ CREATE TABLE "Users" (
 
 -- Create references
 ALTER TABLE "L2RasterProducts"
-    ADD FOREIGN KEY ("definition") REFERENCES "RasterDefinitions" (id),
-    ADD FOREIGN KEY ("currentStatus") REFERENCES "Status" (id) DEFERRABLE INITIALLY DEFERRED;
+    ADD FOREIGN KEY ("definitionID") REFERENCES "RasterDefinitions" (id);
 
 ALTER TABLE "ProductHistory"
-    ADD FOREIGN KEY ("requestedBy") REFERENCES "Users" (id),
-    ADD FOREIGN KEY ("rasterProduct") REFERENCES "L2RasterProducts" (id);
+    ADD FOREIGN KEY ("requestedByID") REFERENCES "Users" (id),
+    ADD FOREIGN KEY ("rasterProductID") REFERENCES "L2RasterProducts" (id);
 
 ALTER TABLE "Status"
     ADD FOREIGN KEY ("productID") REFERENCES "L2RasterProducts" (id) DEFERRABLE INITIALLY DEFERRED;
