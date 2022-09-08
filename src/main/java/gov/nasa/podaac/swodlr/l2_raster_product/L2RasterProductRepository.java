@@ -17,7 +17,7 @@ public interface L2RasterProductRepository extends JpaRepository<L2RasterProduct
                 \"ProductHistory\".\"requestedByID\" = :#{#user.getID()}
                 AND
                 (
-                    :#{#after} IS NULL
+                    :#{#after} = '00000000-0000-0000-0000-000000000000'
                     OR
                     (\"ProductHistory\".timestamp, \"ProductHistory\".\"rasterProductID\") < (SELECT timestamp, \"rasterProductID\" FROM \"ProductHistory\" WHERE \"requestedByID\" = :#{#user.getID()} AND \"rasterProductID\" = :#{#after})
                 )
