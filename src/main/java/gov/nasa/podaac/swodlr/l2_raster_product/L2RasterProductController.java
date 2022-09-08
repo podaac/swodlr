@@ -10,6 +10,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+import gov.nasa.podaac.swodlr.Utils;
 import gov.nasa.podaac.swodlr.status.Status;
 import gov.nasa.podaac.swodlr.user.User;
 
@@ -34,8 +35,7 @@ public class L2RasterProductController {
     @SchemaMapping(typeName="User", field="products")
     public List<L2RasterProduct> getProductsForUser(@ContextValue User user, @Argument UUID after, @Argument int limit) {
         if (after == null)
-            after = UUID.fromString("00000000-0000-0000-0000-000000000000");
-
+            after = Utils.NULL_UUID;
         return l2RasterProductRepository.findByUser(user, after, limit);
     }
 }
