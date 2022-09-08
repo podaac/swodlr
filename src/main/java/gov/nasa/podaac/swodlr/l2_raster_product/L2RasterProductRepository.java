@@ -13,21 +13,14 @@ public interface L2RasterProductRepository extends JpaRepository<L2RasterProduct
         value="""
             SELECT \"L2RasterProducts\".* FROM \"L2RasterProducts\"
             JOIN \"ProductHistory\" ON \"ProductHistory\".\"rasterProductID\" = \"L2RasterProducts\".id
-            WHERE \"ProductHistory\".\"requestedByID\" = :#{#user.getID()}
-            ORDER BY \"ProductHistory\".timestamp DESC LIMIT :#{#limit}
-        """,
-        nativeQuery=true
-    )
-    List<L2RasterProduct> findByUser(User user, int limit);
-
-    @Query(
-        value="""
-            SELECT \"L2RasterProducts\".* FROM \"L2RasterProducts\"
-            JOIN \"ProductHistory\" ON \"ProductHistory\".\"rasterProductID\" = \"L2RasterProducts\".id
             WHERE
                 \"ProductHistory\".\"requestedByID\" = :#{#user.getID()}
                 AND
-                (\"ProductHistory\".timestamp, \"ProductHistory\".\"rasterProductID\") <= (SELECT timestamp, \"rasterProductID\" FROM \"ProductHistory\" WHERE \"requestedByID\" = :#{#user.getID()} AND \"rasterProductID\" = :#{#after})
+                (
+                    :#{#after} IS NULL
+                    OR
+                    (\"ProductHistory\".timestamp, \"ProductHistory\".\"rasterProductID\") < (SELECT timestamp, \"rasterProductID\" FROM \"ProductHistory\" WHERE \"requestedByID\" = :#{#user.getID()} AND \"rasterProductID\" = :#{#after})
+                )
             ORDER BY \"ProductHistory\".timestamp DESC, \"ProductHistory\".\"rasterProductID\" DESC LIMIT :#{#limit}
         """,
         nativeQuery=true

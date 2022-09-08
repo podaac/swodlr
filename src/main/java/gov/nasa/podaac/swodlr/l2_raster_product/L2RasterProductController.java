@@ -33,10 +33,9 @@ public class L2RasterProductController {
 
     @SchemaMapping(typeName="User", field="products")
     public List<L2RasterProduct> getProductsForUser(@ContextValue User user, @Argument UUID after, @Argument int limit) {
-        if (after == null) {
-            return l2RasterProductRepository.findByUser(user, limit);
-        } else {
-            return l2RasterProductRepository.findByUser(user, after, limit);
-        }
+        if (after == null)
+            after = UUID.fromString("00000000-0000-0000-0000-000000000000");
+
+        return l2RasterProductRepository.findByUser(user, after, limit);
     }
 }

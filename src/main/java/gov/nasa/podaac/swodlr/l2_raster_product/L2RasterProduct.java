@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import gov.nasa.podaac.swodlr.product_history.ProductHistory;
 import gov.nasa.podaac.swodlr.raster_definition.RasterDefinition;
 import gov.nasa.podaac.swodlr.status.Status;
 import gov.nasa.podaac.swodlr.user.User;
@@ -36,6 +37,9 @@ public class L2RasterProduct {
         inverseJoinColumns=@JoinColumn(name="requestedBy")
     )
     private Set<User> users;
+
+    @OneToMany(mappedBy="id.rasterProduct")
+    private Set<ProductHistory> history;
 
     public L2RasterProduct() { }
 
