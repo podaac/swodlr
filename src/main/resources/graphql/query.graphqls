@@ -1,0 +1,7 @@
+type Query {
+    currentUser: User
+    statusByProduct(product: ID!, limit: Int = 10): [Status!]
+    statusByPrevious(after: ID!, limit: Int = 10): [Status!]
+    # TODO: Create filters for definitions based on schema
+    rasterDefinitions: [RasterDefinition!]
+}

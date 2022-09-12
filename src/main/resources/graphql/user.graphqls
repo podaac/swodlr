@@ -1,0 +1,4 @@
+type User {
+    id: ID!
+    products(after: ID, limit: Int = 10): [L2RasterProduct!]
+}

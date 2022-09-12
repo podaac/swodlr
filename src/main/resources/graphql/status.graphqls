@@ -1,0 +1,7 @@
+type Status {
+    id: ID!
+    product: L2RasterProduct!
+    timestamp: String!
+    state: State!,
+    reason: String
+}

@@ -1,4 +1,4 @@
-package org.nasa.podaac.swodlr;
+package gov.nasa.podaac.swodlr;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
