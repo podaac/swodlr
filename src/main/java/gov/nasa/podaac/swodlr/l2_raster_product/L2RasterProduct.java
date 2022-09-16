@@ -33,8 +33,8 @@ public class L2RasterProduct {
     @ManyToMany
     @JoinTable(
         name="ProductHistory",
-        joinColumns=@JoinColumn(name="rasterProduct"),
-        inverseJoinColumns=@JoinColumn(name="requestedBy")
+        joinColumns=@JoinColumn(name="rasterProductID"),
+        inverseJoinColumns=@JoinColumn(name="requestedByID")
     )
     private Set<User> users;
 
