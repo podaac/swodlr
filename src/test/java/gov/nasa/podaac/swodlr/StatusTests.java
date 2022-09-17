@@ -65,6 +65,7 @@ public class StatusTests {
 
     @AfterEach
     public void resetDatabase() {
+        l2RasterProductRepository.deleteAll();
         rasterDefinitionRepository.delete(definition);
     }
 

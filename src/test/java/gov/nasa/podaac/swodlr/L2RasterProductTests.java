@@ -22,6 +22,7 @@ import org.springframework.graphql.test.tester.HttpGraphQlTester;
 import org.springframework.graphql.test.tester.GraphQlTester.Response;
 import org.springframework.test.context.TestPropertySource;
 
+import gov.nasa.podaac.swodlr.l2_raster_product.L2RasterProductRepository;
 import gov.nasa.podaac.swodlr.raster_definition.RasterDefinition;
 import gov.nasa.podaac.swodlr.raster_definition.RasterDefinitionRepository;
 
@@ -35,6 +36,9 @@ public class L2RasterProductTests {
     private HttpGraphQlTester graphQlTester;
 
     @Autowired
+    private L2RasterProductRepository l2RasterProductRepository;
+
+    @Autowired
     private RasterDefinitionRepository rasterDefinitionRepository;
 
     @BeforeEach
@@ -45,6 +49,7 @@ public class L2RasterProductTests {
 
     @AfterEach
     public void cleanDatabase() {
+        l2RasterProductRepository.deleteAll();
         rasterDefinitionRepository.delete(definition);
     }
 

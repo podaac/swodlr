@@ -10,7 +10,7 @@ CREATE TABLE "RasterDefinitions" (
 CREATE TABLE "L2RasterProducts" (
     "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     "definitionID" uuid NOT NULL,
-    FOREIGN KEY ("definitionID") REFERENCES "RasterDefinitions" ("id") ON DELETE CASCADE
+    FOREIGN KEY ("definitionID") REFERENCES "RasterDefinitions" ("id")
 );
 
 CREATE TABLE "ProductHistory" (
