@@ -45,15 +45,15 @@ public class StatusTests {
     @Autowired
     L2RasterProductRepository l2RasterProductRepository;
 
-    @Value("classpath:emerson.txt")
-    Resource emerson;
+    @Value("classpath:frost.txt")
+    Resource frost;
 
     @Test
     public void queryStatus() throws IOException {
         final int PAGES = 2;
         final int PAGE_LIMIT = 5;
 
-        BufferedReader poetryReader = new BufferedReader(new InputStreamReader(emerson.getInputStream()));
+        BufferedReader poetryReader = new BufferedReader(new InputStreamReader(frost.getInputStream()));
         List<String> reasons = poetryReader.lines().toList();
 
         List<State> stateEnums = Lists.newArrayList(State.values());
