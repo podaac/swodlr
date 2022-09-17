@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,6 +48,11 @@ public class StatusTests {
 
     @Value("classpath:frost.txt")
     Resource frost;
+
+    @AfterEach
+    public void resetDatabase() {
+        l2RasterProductRepository.deleteAll();
+    }
 
     @Test
     public void queryStatus() throws IOException {
