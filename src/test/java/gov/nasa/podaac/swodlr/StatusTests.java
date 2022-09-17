@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,8 @@ import org.springframework.test.context.TestPropertySource;
 
 import gov.nasa.podaac.swodlr.l2_raster_product.L2RasterProduct;
 import gov.nasa.podaac.swodlr.l2_raster_product.L2RasterProductRepository;
+import gov.nasa.podaac.swodlr.raster_definition.RasterDefinition;
+import gov.nasa.podaac.swodlr.raster_definition.RasterDefinitionRepository;
 import gov.nasa.podaac.swodlr.status.State;
 import gov.nasa.podaac.swodlr.status.Status;
 import gov.nasa.podaac.swodlr.status.StatusRepository;
@@ -37,7 +40,7 @@ import graphql.com.google.common.collect.Lists;
 @TestPropertySource({"file:./src/main/resources/application.properties", "classpath:application.properties"})
 @AutoConfigureHttpGraphQlTester
 public class StatusTests {
-    private static final UUID VALID_DEFINITION_ID = UUID.fromString("a6d12de3-5f76-4e2d-9a42-1f2ab7f9ed7c");
+    private RasterDefinition definition;
 
     @Autowired
     HttpGraphQlTester graphQlTester;
@@ -48,12 +51,21 @@ public class StatusTests {
     @Autowired
     L2RasterProductRepository l2RasterProductRepository;
 
+    @Autowired
+    RasterDefinitionRepository rasterDefinitionRepository;
+
     @Value("classpath:frost.txt")
     Resource frost;
 
+    @BeforeEach
+    public void setupDefinition() {
+        definition = new RasterDefinition();
+        rasterDefinitionRepository.save(definition);
+    }
+
     @AfterEach
     public void resetDatabase() {
-        l2RasterProductRepository.deleteAll();
+        rasterDefinitionRepository.delete(definition);
     }
 
     @Test
@@ -70,7 +82,7 @@ public class StatusTests {
         /* Setup mock data */
         UUID productID = graphQlTester
             .documentName("mutation/createL2RasterProduct")
-            .variable("rasterDefinitionID", VALID_DEFINITION_ID)
+            .variable("rasterDefinitionID", definition.getID())
             .execute()
             .path("createL2RasterProduct.id")
             .entity(UUID.class)
@@ -168,7 +180,7 @@ public class StatusTests {
             response
                 .path("status[*].product.definition.id")
                 .entityList(UUID.class)
-                .containsExactly(Collections.nCopies(PAGE_LIMIT, VALID_DEFINITION_ID).toArray(UUID[]::new));
+                .containsExactly(Collections.nCopies(PAGE_LIMIT, definition.getID()).toArray(UUID[]::new));
         }
     }
 

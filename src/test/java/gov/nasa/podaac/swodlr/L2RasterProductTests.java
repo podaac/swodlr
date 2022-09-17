@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester;
@@ -21,23 +22,30 @@ import org.springframework.graphql.test.tester.HttpGraphQlTester;
 import org.springframework.graphql.test.tester.GraphQlTester.Response;
 import org.springframework.test.context.TestPropertySource;
 
-import gov.nasa.podaac.swodlr.l2_raster_product.L2RasterProductRepository;
+import gov.nasa.podaac.swodlr.raster_definition.RasterDefinition;
+import gov.nasa.podaac.swodlr.raster_definition.RasterDefinitionRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource({"file:./src/main/resources/application.properties", "classpath:application.properties"})
 @AutoConfigureHttpGraphQlTester
 public class L2RasterProductTests {
-    private static final UUID VALID_DEFINITION_ID = UUID.fromString("a6d12de3-5f76-4e2d-9a42-1f2ab7f9ed7c");
+    private RasterDefinition definition;
 
     @Autowired
-    HttpGraphQlTester graphQlTester;
+    private HttpGraphQlTester graphQlTester;
 
     @Autowired
-    L2RasterProductRepository l2RasterProductRepository;
+    private RasterDefinitionRepository rasterDefinitionRepository;
+
+    @BeforeEach
+    public void setupDefinition() {
+        definition = new RasterDefinition();
+        rasterDefinitionRepository.save(definition);
+    }
 
     @AfterEach
-    public void resetDatabase() {
-        l2RasterProductRepository.deleteAll();
+    public void cleanDatabase() {
+        rasterDefinitionRepository.delete(definition);
     }
 
     @Test
@@ -46,14 +54,14 @@ public class L2RasterProductTests {
 
         Response response = graphQlTester
             .documentName("mutation/createL2RasterProduct")
-            .variable("rasterDefinitionID", VALID_DEFINITION_ID)
+            .variable("rasterDefinitionID", definition.getID())
             .execute();
 
         /* -- Definition -- */
         response
             .path("createL2RasterProduct.definition.id")
-            .entity(String.class)
-            .isEqualTo(VALID_DEFINITION_ID.toString());
+            .entity(UUID.class)
+            .isEqualTo(definition.getID());
             
         /* -- Status -- */
         // Timestamp
@@ -105,10 +113,13 @@ public class L2RasterProductTests {
         LocalDateTime start = LocalDateTime.now();
 
         // Create new mock products to fill pages for pagination
+        RasterDefinition definition = new RasterDefinition();
+        rasterDefinitionRepository.save(definition);
+
         for (int i = 0; i < PAGE_LIMIT * PAGES; i++) {
             graphQlTester
                 .documentName("mutation/createL2RasterProduct")
-                .variable("rasterDefinitionID", VALID_DEFINITION_ID)
+                .variable("rasterDefinitionID", definition.getID())
                 .executeAndVerify();
         }
 
@@ -142,10 +153,9 @@ public class L2RasterProductTests {
             response
                 .path("currentUser.products[*].definition.id")
                 .entityList(UUID.class)
-                .containsExactly(Collections.nCopies(PAGE_LIMIT, VALID_DEFINITION_ID).toArray(UUID[]::new));
+                .containsExactly(Collections.nCopies(PAGE_LIMIT, definition.getID()).toArray(UUID[]::new));
 
             /* -- Statuses -- */
-            
             // State
             response
                 .path("currentUser.products[*].status[*].state")
@@ -175,6 +185,5 @@ public class L2RasterProductTests {
                 assertTrue(timestamp.compareTo(start) > 0, "timestamp: %s, start: %s".formatted(timestamp, start));
             }
         }
-
     }
 }
