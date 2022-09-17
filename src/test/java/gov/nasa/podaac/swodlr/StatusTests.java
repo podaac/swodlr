@@ -43,19 +43,19 @@ public class StatusTests {
     private RasterDefinition definition;
 
     @Autowired
-    HttpGraphQlTester graphQlTester;
+    private HttpGraphQlTester graphQlTester;
 
     @Autowired
-    StatusRepository statusRepository;
+    private StatusRepository statusRepository;
 
     @Autowired
-    L2RasterProductRepository l2RasterProductRepository;
+    private L2RasterProductRepository l2RasterProductRepository;
 
     @Autowired
-    RasterDefinitionRepository rasterDefinitionRepository;
+    private RasterDefinitionRepository rasterDefinitionRepository;
 
     @Value("classpath:frost.txt")
-    Resource frost;
+    private Resource frost;
 
     @BeforeEach
     public void setupDefinition() {

@@ -13,7 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 @AutoConfigureHttpGraphQlTester
 public class UserTests {
     @Autowired
-    HttpGraphQlTester graphQlTester;
+    private HttpGraphQlTester graphQlTester;
 
     @Test
     public void queryCurrentUser() {
