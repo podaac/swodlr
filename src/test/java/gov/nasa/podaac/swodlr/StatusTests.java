@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -155,6 +156,19 @@ public class StatusTests {
                 previousTimestamp = timestamp;
                 assertTrue(timestamp.compareTo(start) > 0, "timestamp: %s, start: %s".formatted(timestamp, start));
             }
+
+            /* Product */
+            // ID
+            response
+                .path("status[*].product.id")
+                .entityList(UUID.class)
+                .containsExactly(Collections.nCopies(PAGE_LIMIT, productID).toArray(UUID[]::new));
+            
+            // Definition
+            response
+                .path("status[*].product.definition.id")
+                .entityList(UUID.class)
+                .containsExactly(Collections.nCopies(PAGE_LIMIT, VALID_DEFINITION_ID).toArray(UUID[]::new));
         }
     }
 

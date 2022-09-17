@@ -4,5 +4,11 @@ query ($product: ID!, $limit: Int) {
         timestamp
         state
         reason
+        product {
+            id
+            definition {
+                id
+            }
+        }
     }
 }
