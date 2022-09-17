@@ -1,6 +1,7 @@
 package gov.nasa.podaac.swodlr;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedReader;
@@ -108,7 +109,7 @@ public class StatusTests {
                 .hasSize(PAGE_LIMIT)
                 .satisfies(ids -> {
                     for (UUID id : ids) {
-                        assertTrue(!previouslySeen.contains(id));
+                        assertFalse(previouslySeen.contains(id));
                         previouslySeen.add(id);
                     }
                 })
