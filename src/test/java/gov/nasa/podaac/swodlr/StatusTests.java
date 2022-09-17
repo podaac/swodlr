@@ -14,9 +14,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester;
@@ -37,6 +40,7 @@ import gov.nasa.podaac.swodlr.status.StatusRepository;
 import graphql.com.google.common.collect.Lists;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@TestInstance(Lifecycle.PER_CLASS)
 @TestPropertySource({"file:./src/main/resources/application.properties", "classpath:application.properties"})
 @AutoConfigureHttpGraphQlTester
 public class StatusTests {
@@ -57,16 +61,20 @@ public class StatusTests {
     @Value("classpath:frost.txt")
     private Resource frost;
 
-    @BeforeEach
+    @BeforeAll
     public void setupDefinition() {
         definition = new RasterDefinition();
         rasterDefinitionRepository.save(definition);
     }
 
-    @AfterEach
-    public void resetDatabase() {
-        l2RasterProductRepository.deleteAll();
+    @AfterAll
+    public void deleteDefinition() {
         rasterDefinitionRepository.delete(definition);
+    }
+
+    @AfterEach
+    public void deleteProducts() {
+        l2RasterProductRepository.deleteAll();
     }
 
     @Test
