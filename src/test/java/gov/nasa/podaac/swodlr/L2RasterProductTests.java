@@ -28,6 +28,7 @@ import org.springframework.test.context.TestPropertySource;
 import gov.nasa.podaac.swodlr.l2_raster_product.L2RasterProductRepository;
 import gov.nasa.podaac.swodlr.raster_definition.RasterDefinition;
 import gov.nasa.podaac.swodlr.raster_definition.RasterDefinitionRepository;
+import gov.nasa.podaac.swodlr.status.State;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestInstance(Lifecycle.PER_CLASS)
