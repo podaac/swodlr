@@ -92,7 +92,7 @@ public class L2RasterProductTests {
             .path("createL2RasterProduct.status[*].state")
             .entityList(String.class)
             .hasSize(1)
-            .containsExactly("NEW");
+            .containsExactly(State.NEW.toString());
         
         // Reason
         response
