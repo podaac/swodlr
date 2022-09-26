@@ -175,7 +175,7 @@ public class L2RasterProductTests {
                 .path("currentUser.products[*].status[*].state")
                 .entityList(String.class)
                 .hasSize(PAGE_LIMIT)
-                .satisfies(states -> states.forEach(state -> assertEquals("NEW", state)));
+                .satisfies(states -> states.forEach(state -> assertEquals(State.NEW.toString(), state)));
 
             // Reason
             response
