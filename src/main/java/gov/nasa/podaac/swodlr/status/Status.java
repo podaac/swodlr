@@ -1,6 +1,5 @@
 package gov.nasa.podaac.swodlr.status;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -25,7 +24,7 @@ public class Status {
     private L2RasterProduct product;
 
     @Column(nullable=false)
-    private Timestamp timestamp;
+    private LocalDateTime timestamp;
 
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
@@ -35,16 +34,17 @@ public class Status {
     private String reason;
 
     public Status() {
-        this(null);
+        this(null, null);
     }
 
-    public Status(State state) {
-        this(state, null);
+    public Status(L2RasterProduct product, State state) {
+        this(product, state, null);
     }
 
-    public Status(State state, String reason) {
+    public Status(L2RasterProduct product, State state, String reason) {
         this.id = UUID.randomUUID();
-        this.timestamp = Timestamp.valueOf(LocalDateTime.now());
+        this.product = product;
+        this.timestamp = LocalDateTime.now();
         this.state = state;
         this.reason = reason;
     }
@@ -57,12 +57,7 @@ public class Status {
         return product;
     }
 
-    public Status setProduct(L2RasterProduct product) {
-        this.product = product;
-        return this;
-    }
-
-    public Timestamp getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -72,5 +67,10 @@ public class Status {
 
     public String getReason() {
         return reason;
+    }
+
+    @Override
+    public String toString() {
+        return "%s (id: %s, productID: %s, timestamp: %s, state: %s, reason: %s)".formatted(super.toString(), id, product, timestamp, state, reason);
     }
 }

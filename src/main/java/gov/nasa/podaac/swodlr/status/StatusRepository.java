@@ -16,7 +16,7 @@ public interface StatusRepository extends JpaRepository<Status, UUID> {
                 \"productID\" = :#{#product.getID()}
                 AND
                 (
-                    :#{#after} = '00000000-0000-0000-0000-000000000000'
+                    :#{#after} = CAST('00000000-0000-0000-0000-000000000000' as uuid)
                     OR
                     (timestamp, id) < (SELECT timestamp, id FROM \"Status\" WHERE id = :#{#after})
                 )

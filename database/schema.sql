@@ -1,39 +1,32 @@
 -- Create tables
+CREATE TABLE "Users" (
+    "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY
+);
+
+CREATE TABLE "RasterDefinitions" (
+    "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY
+);
+
 CREATE TABLE "L2RasterProducts" (
-    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    "definitionID" uuid NOT NULL
+    "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    "definitionID" uuid NOT NULL,
+    FOREIGN KEY ("definitionID") REFERENCES "RasterDefinitions" ("id")
 );
 
 CREATE TABLE "ProductHistory" (
     "requestedByID" uuid,
     "rasterProductID" uuid,
     "timestamp" timestamp with time zone NOT NULL DEFAULT current_timestamp,
-    PRIMARY KEY ("requestedByID", "rasterProductID")
-);
-
-CREATE TABLE "RasterDefinitions" (
-    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid()
+    PRIMARY KEY ("requestedByID", "rasterProductID"),
+    FOREIGN KEY ("requestedByID") REFERENCES "Users" ("id"),
+    FOREIGN KEY ("rasterProductID") REFERENCES "L2RasterProducts" ("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "Status" (
-    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     "productID" uuid NOT NULL,
     "timestamp" timestamp with time zone NOT NULL DEFAULT current_timestamp,
     "state" varchar NOT NULL,
-    "reason" text
+    "reason" text,
+    FOREIGN KEY ("productID") REFERENCES "L2RasterProducts" ("id") ON DELETE CASCADE
 );
-
-CREATE TABLE "Users" (
-    "id" uuid PRIMARY KEY DEFAULT gen_random_uuid()
-);
-
--- Create references
-ALTER TABLE "L2RasterProducts"
-    ADD FOREIGN KEY ("definitionID") REFERENCES "RasterDefinitions" (id);
-
-ALTER TABLE "ProductHistory"
-    ADD FOREIGN KEY ("requestedByID") REFERENCES "Users" (id),
-    ADD FOREIGN KEY ("rasterProductID") REFERENCES "L2RasterProducts" (id);
-
-ALTER TABLE "Status"
-    ADD FOREIGN KEY ("productID") REFERENCES "L2RasterProducts" (id) DEFERRABLE INITIALLY DEFERRED;

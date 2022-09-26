@@ -1,0 +1,14 @@
+query ($after: ID!, $limit: Int) {
+    status: statusByPrevious(after: $after, limit: $limit) {
+        id
+        timestamp
+        state
+        reason
+        product {
+            id
+            definition {
+                id
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+query ($after: ID, $limit: Int) {
+    currentUser {
+        products(after: $after, limit: $limit) {
+            id
+            definition {
+                id
+            }
+            status {
+                id
+                timestamp
+                state
+                reason
+            }
+        }
+    }
+}

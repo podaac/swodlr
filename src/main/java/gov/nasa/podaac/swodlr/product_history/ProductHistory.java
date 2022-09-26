@@ -1,6 +1,5 @@
 package gov.nasa.podaac.swodlr.product_history;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -18,13 +17,13 @@ public class ProductHistory {
     private ProductHistoryID id;
 
     @Column(nullable=false)
-    Timestamp timestamp;
+    LocalDateTime timestamp;
 
     public ProductHistory() { }
 
     public ProductHistory(User requestedBy, L2RasterProduct rasterProduct) {
         id = new ProductHistoryID(requestedBy, rasterProduct);
-        timestamp = Timestamp.valueOf(LocalDateTime.now());
+        timestamp = LocalDateTime.now();
     }
 
     public User getRequestedBy() {
@@ -35,7 +34,7 @@ public class ProductHistory {
         return id.getRasterProduct();
     }
 
-    public Timestamp getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 }

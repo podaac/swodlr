@@ -38,11 +38,9 @@ public class L2RasterProductService {
             throw new SwodlrException("Definition not found");
 
         RasterDefinition definition = queryResult.get();
-        Status status = new Status(State.NEW);
         L2RasterProduct product = new L2RasterProduct(definition);
+        Status status = new Status(product, State.NEW);
         ProductHistory history = new ProductHistory(user, product);
-
-        status.setProduct(product);
 
         product = l2RasterProductRepository.save(product);
         statusRepository.save(status);

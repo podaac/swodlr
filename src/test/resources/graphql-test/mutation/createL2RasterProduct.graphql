@@ -1,0 +1,14 @@
+mutation ($rasterDefinitionID: ID!) {
+	createL2RasterProduct(definition: $rasterDefinitionID) {
+		id
+		definition {
+            id
+        }
+        status {
+            id
+			timestamp
+            state
+            reason
+        }
+    }
+}
