@@ -3,6 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.12.RELEASE'
     id 'application'
     id 'jacoco'
+    id 'checkstyle'
 }
 
 group = 'gov.nasa.podaac.swodlr'
@@ -27,4 +28,9 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+checkstyle {
+    toolVersion '10.3.4'
+    maxWarnings = 0
 }
