@@ -7,11 +7,16 @@ plugins {
 }
 
 group = 'gov.nasa.podaac.swodlr'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
+}
+
+checkstyle {
+    toolVersion '10.3.4'
+    maxWarnings = 0
 }
 
 dependencies {
@@ -28,9 +33,4 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
-}
-
-checkstyle {
-    toolVersion '10.3.4'
-    maxWarnings = 0
 }
