@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+  "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+  "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+  <suppress checks="MissingJavadocType"/>
+  <suppress checks="MissingJavadocMethod"/>
+  <suppress checks="LineLength"
+      files="L2RasterProductRepository\.java"
+      lines="20,22"/>
+
+  <suppress checks="LineLength"
+      files=".+Tests\.java"/>
+</suppressions>
