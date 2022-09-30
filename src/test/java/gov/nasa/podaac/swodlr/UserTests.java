@@ -12,16 +12,16 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource({"file:./src/main/resources/application.properties", "classpath:application.properties"})
 @AutoConfigureHttpGraphQlTester
 public class UserTests {
-    @Autowired
-    private HttpGraphQlTester graphQlTester;
+  @Autowired
+  private HttpGraphQlTester graphQlTester;
 
-    @Test
-    public void queryCurrentUser() {
-        graphQlTester
-            .documentName("query/currentUser")
-            .execute()
-            .path("currentUser.id")
-            .entity(String.class)
-            .isEqualTo("fee1dc78-0604-4fa6-adae-0b4b55440e7d");
-    }
+  @Test
+  public void queryCurrentUser() {
+    graphQlTester
+        .documentName("query/currentUser")
+        .execute()
+        .path("currentUser.id")
+        .entity(String.class)
+        .isEqualTo("fee1dc78-0604-4fa6-adae-0b4b55440e7d");
+  }
 }
