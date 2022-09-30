@@ -4,10 +4,11 @@ plugins {
     id 'application'
     id 'jacoco'
     id 'checkstyle'
+    id 'com.google.cloud.tools.jib' version '3.3.0'
 }
 
 group = 'gov.nasa.podaac.swodlr'
-version = '0.0.1'
+version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 repositories {
@@ -16,9 +17,9 @@ repositories {
 
 checkstyle {
     toolVersion '10.3.4'
-    configFile = file("/google_checks.xml")
+    configFile = file('/google_checks.xml')
     configProperties = [
-        "org.checkstyle.google.suppressionfilter.config": "$projectDir/config/checkstyle/suppressions.xml"
+        'org.checkstyle.google.suppressionfilter.config': '$projectDir/config/checkstyle/suppressions.xml'
     ]
     maxWarnings = 0
 }
@@ -39,6 +40,26 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-tasks.named("check").configure {
-    dependsOn(tasks.named("jacocoTestReport"))
+tasks.named('check').configure {
+    dependsOn(tasks.named('jacocoTestReport'))
+}
+
+tasks.named('jib').configure {
+    from {
+        image = 'eclipse-temurin:17-jre-alpine'
+    }
+    to {
+
+        image = "ghcr.io/podaac/swodlr-api:${version}"
+        auth {
+            username = System.env.GITHUB_ACTOR
+            password = System.env.GITHUB_TOKEN
+        }
+    }
+    container {
+        labels = [
+            'org.opencontainers.image.source': 'https://github.com/podaac/swodlr',
+            'org.opencontainers.image.licenses': 'Apache-2.0'
+        ]
+    }
 }
