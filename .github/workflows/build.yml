@@ -13,11 +13,15 @@ jobs:
           cache: 'gradle'
       - name: Build with Gradle
         run: gradle build
-      - uses: actions/upload-artifact@v3.1.0
+      - name: Build & push to ghcr
+        run: gradle jib
+      - name: Upload compiled .jars
+        uses: actions/upload-artifact@v3.1.0
         with:
           name: build-libs
           path: build/libs/*.jar
-      - uses: actions/upload-artifact@v3.1.0
+      - name: Upload test reports
+        uses: actions/upload-artifact@v3.1.0
         with:
           name: reports
           path: build/reports
