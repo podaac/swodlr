@@ -17,3 +17,7 @@ jobs:
         with:
           name: build-libs
           path: build/libs/*.jar
+      - uses: actions/upload-artifact@v3.1.0
+        with:
+          name: reports
+          path: build/reports
