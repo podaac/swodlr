@@ -1,5 +1,6 @@
 package gov.nasa.podaac.swodlr.user;
 
+import gov.nasa.podaac.swodlr.l2rasterproduct.L2RasterProduct;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Entity;
@@ -9,23 +10,21 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import gov.nasa.podaac.swodlr.l2_raster_product.L2RasterProduct;
-
 @Entity
-@Table(name="Users")
+@Table(name = "Users")
 public class User {
-    @Id
-    private UUID id;
+  @Id
+  private UUID id;
 
-    @ManyToMany
-    @JoinTable(
-        name="ProductHistory",
-        joinColumns=@JoinColumn(name="requestedBy"),
-        inverseJoinColumns=@JoinColumn(name="rasterProduct")
-    )
-    Set<L2RasterProduct> productHistory;
-    
-    public UUID getID() {
-        return id;
-    }
+  @ManyToMany
+  @JoinTable(
+      name = "ProductHistory",
+      joinColumns = @JoinColumn(name = "requestedBy"),
+      inverseJoinColumns = @JoinColumn(name = "rasterProduct")
+  )
+  Set<L2RasterProduct> productHistory;
+  
+  public UUID getId() {
+    return id;
+  }
 }
