@@ -48,13 +48,15 @@ jobs:
       #   -- Building --
       - name: Build with Gradle
         run: gradle build
-      - name: Build & push to ghcr
+      - name: Build & push container images
         # Only push container images for releases, rcs, and alphas
         if: >
           github.ref == 'refs/heads/main' ||
           github.ref == 'refs/heads/develop' ||
           startsWith(github.ref, 'refs/heads/release/')
-        run: gradle jibDockerBuild
+        run: |
+          gradle jibDockerBuild
+          docker image push --all-tags ghcr.io/podaac/swodlr-api
       - name: Upload compiled .jars
         uses: actions/upload-artifact@v3.1.0
         with:
