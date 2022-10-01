@@ -44,6 +44,9 @@ jobs:
       - name: Release version
         if: github.ref == 'refs/heads/main'
         run: bumpver --tag final
+      - name: Get current version
+        id: get_version
+        run: echo "::set-output version=$(bumpver show -e | awk -F= '$1 == "TAG" {print $2};')
 
       #   -- Building --
       - name: Build with Gradle
@@ -55,8 +58,14 @@ jobs:
           github.ref == 'refs/heads/develop' ||
           startsWith(github.ref, 'refs/heads/release/')
         run: |
+          # gradle jib
+
+          # Push one tag at a time; fix for multi-tag push issue in ghcr (but fixed in gitlab)
+          # https://gitlab.com/gitlab-org/container-registry/-/issues/640
           gradle jibDockerBuild
-          docker image push --all-tags ghcr.io/podaac/swodlr-api
+          for TAG in $(docker image ls -f "dangling=false" --format "{{.Tag}}" ghcr.io/joshgarde/swodlr-api); do
+            docker image push ghcr.io/joshgarde/swodlr-api:$TAG
+          done
       - name: Upload compiled .jars
         uses: actions/upload-artifact@v3.1.0
         with:
