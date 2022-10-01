@@ -44,9 +44,6 @@ jobs:
       - name: Release version
         if: github.ref == 'refs/heads/main'
         run: bumpver --tag final
-      - name: Get current version
-        id: get_version
-        run: echo "::set-output version=$(bumpver show -e | awk -F= '$1 == "TAG" {print $2};')
 
       #   -- Building --
       - name: Build with Gradle
