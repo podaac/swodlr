@@ -54,6 +54,7 @@ jib {
         }
     }
     container {
+        format = "OCI"
         labels = [
             'org.opencontainers.image.source': 'https://github.com/joshgarde/swodlr',
             'org.opencontainers.image.licenses': 'Apache-2.0'
