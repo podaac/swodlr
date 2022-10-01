@@ -17,11 +17,6 @@ jobs:
           python-version: '3.10'
       - name: Install bumpver
         run: pip3 install bumpver
-      - uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup git user
         run: |
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
