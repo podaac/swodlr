@@ -42,15 +42,17 @@ jobs:
 
       #   -- Building --
       - name: Build with Gradle
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gradle build
       - name: Build & push to ghcr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # Only push container images for releases, rcs, and alphas
         if: >
           github.ref == 'refs/heads/main' ||
           github.ref == 'refs/heads/develop' ||
           startsWith(github.ref, 'refs/heads/release/')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gradle jib
       - name: Upload compiled .jars
         uses: actions/upload-artifact@v3.1.0
