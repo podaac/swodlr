@@ -15,15 +15,6 @@ repositories {
     mavenCentral()
 }
 
-checkstyle {
-    toolVersion '10.3.4'
-    configFile = file('/google_checks.xml')
-    configProperties = [
-        'org.checkstyle.google.suppressionfilter.config': "$projectDir/config/checkstyle/suppressions.xml"
-    ]
-    maxWarnings = 0
-}
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-graphql'
@@ -36,15 +27,16 @@ dependencies {
     testImplementation 'com.h2database:h2:2.1.214'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+checkstyle {
+    toolVersion '10.3.4'
+    configFile = file('/google_checks.xml')
+    configProperties = [
+        'org.checkstyle.google.suppressionfilter.config': "$projectDir/config/checkstyle/suppressions.xml"
+    ]
+    maxWarnings = 0
 }
 
-tasks.named('check').configure {
-    dependsOn(tasks.named('jacocoTestReport'))
-}
-
-tasks.named('jib').configure {
+jib {
     from {
         image = 'eclipse-temurin:17-jre-alpine'
     }
@@ -68,4 +60,12 @@ tasks.named('jib').configure {
     } else if (headRef.startsWith('release')) {
         container.tags = ['rc']
     }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named('check').configure {
+    dependsOn(tasks.named('jacocoTestReport'))
 }
