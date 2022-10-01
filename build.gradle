@@ -19,7 +19,7 @@ checkstyle {
     toolVersion '10.3.4'
     configFile = file('/google_checks.xml')
     configProperties = [
-        'org.checkstyle.google.suppressionfilter.config': '$projectDir/config/checkstyle/suppressions.xml'
+        'org.checkstyle.google.suppressionfilter.config': "$projectDir/config/checkstyle/suppressions.xml"
     ]
     maxWarnings = 0
 }
