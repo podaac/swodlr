@@ -41,7 +41,7 @@ jib {
         image = 'eclipse-temurin:17-jre-alpine'
     }
     to {
-        image = "ghcr.io/joshgarde/swodlr-api:${version}"
+        image = "ghcr.io/podaac/swodlr-api:${version}"
 
         def headRef = System.env.GITHUB_REF_NAME
         if (headRef.equals('develop') || headRef.equals('main')) {
@@ -53,7 +53,7 @@ jib {
     container {
         format = "OCI"
         labels = [
-            'org.opencontainers.image.source': 'https://github.com/joshgarde/swodlr',
+            'org.opencontainers.image.source': 'https://github.com/podaac/swodlr',
             'org.opencontainers.image.licenses': 'Apache-2.0'
         ]
     }
