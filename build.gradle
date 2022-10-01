@@ -49,7 +49,6 @@ tasks.named('jib').configure {
         image = 'eclipse-temurin:17-jre-alpine'
     }
     to {
-
         image = "ghcr.io/podaac/swodlr-api:${version}"
         auth {
             username = System.env.GITHUB_ACTOR
@@ -61,5 +60,12 @@ tasks.named('jib').configure {
             'org.opencontainers.image.source': 'https://github.com/podaac/swodlr',
             'org.opencontainers.image.licenses': 'Apache-2.0'
         ]
+    }
+
+    def headRef = System.env.GITHUB_HEAD_REF
+    if (headRef.equals('develop') || headRef.equals('main')) {
+        container.tags = [headRef]
+    } else if (headRef.startsWith('release')) {
+        container.tags = ['rc']
     }
 }
