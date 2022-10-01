@@ -7,6 +7,11 @@ jobs:
     steps:
       #   -- Setup --
       - uses: actions/checkout@v3
+      - uses: docker/login-action@v2.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-java@v3.5.1
         with:
           distribution: 'temurin'
@@ -42,18 +47,14 @@ jobs:
 
       #   -- Building --
       - name: Build with Gradle
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gradle build
       - name: Build & push to ghcr
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # Only push container images for releases, rcs, and alphas
         if: >
           github.ref == 'refs/heads/main' ||
           github.ref == 'refs/heads/develop' ||
           startsWith(github.ref, 'refs/heads/release/')
-        run: gradle jib
+        run: gradle jibDockerBuild
       - name: Upload compiled .jars
         uses: actions/upload-artifact@v3.1.0
         with:
