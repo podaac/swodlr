@@ -34,9 +34,9 @@ jobs:
           TAG=$(bumpver show -e | awk -F= '$1 == "TAG" {print $2};')
           if [ $TAG == 'final' ]; then
             # Bump patch version first then append tag
-            bumpver --patch --tag alpha --tag-num
+            bumpver update --patch --tag alpha --tag-num
           else
-            bumpver --tag alpha --tag-num
+            bumpver update --tag alpha --tag-num
           fi
       - name: Bump rc version
         if: startsWith(github.ref, 'refs/heads/release/')
