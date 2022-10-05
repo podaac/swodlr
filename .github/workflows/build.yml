@@ -1,0 +1,75 @@
+name: Build 'n Deploy
+on: push
+jobs:
+  build-api:
+    name: build, lint, and test API
+    runs-on: ubuntu-latest
+    steps:
+      #   -- Setup --
+      - uses: actions/checkout@v3
+      - uses: docker/login-action@v2.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-java@v3.5.1
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+      - uses: actions/setup-python@v4.2.0
+        with:
+          python-version: '3.10'
+      - name: Install bumpver
+        run: pip3 install bumpver
+      - name: Setup git user
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+
+      #   -- Version Bumping --
+      - name: Bump alpha version
+        if: github.ref == 'refs/heads/develop'
+        run: |
+          TAG=$(bumpver show -e | awk -F= '$1 == "TAG" {print $2};')
+          if [ $TAG == 'final' ]; then
+            # Bump patch version first then append tag
+            bumpver update --patch --tag alpha --tag-num
+          else
+            bumpver update --tag alpha --tag-num
+          fi
+      - name: Bump rc version
+        if: startsWith(github.ref, 'refs/heads/release/')
+        run: bumpver --tag rc --tag-num
+      - name: Release version
+        if: github.ref == 'refs/heads/main'
+        run: bumpver --tag final
+
+      #   -- Building --
+      - name: Build with Gradle
+        run: gradle build
+      - name: Build & push container images
+        # Only push container images for releases, rcs, and alphas
+        if: >
+          github.ref == 'refs/heads/main' ||
+          github.ref == 'refs/heads/develop' ||
+          startsWith(github.ref, 'refs/heads/release/')
+        run: |
+          # gradle jib
+
+          # Push one tag at a time; fix for multi-tag push issue in ghcr (but fixed in gitlab)
+          # https://gitlab.com/gitlab-org/container-registry/-/issues/640
+          gradle jibDockerBuild
+          for TAG in $(docker image ls -f "dangling=false" --format "{{.Tag}}" ghcr.io/podaac/swodlr-api); do
+            docker image push ghcr.io/podaac/swodlr-api:$TAG
+          done
+      - name: Upload compiled .jars
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: build-libs
+          path: build/libs/*.jar
+      - name: Upload test reports
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: reports
+          path: build/reports

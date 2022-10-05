@@ -3,10 +3,12 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.12.RELEASE'
     id 'application'
     id 'jacoco'
+    id 'checkstyle'
+    id 'com.google.cloud.tools.jib' version '3.3.0'
 }
 
 group = 'gov.nasa.podaac.swodlr'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1-alpha0'
 sourceCompatibility = '17'
 
 repositories {
@@ -25,6 +27,42 @@ dependencies {
     testImplementation 'com.h2database:h2:2.1.214'
 }
 
+checkstyle {
+    toolVersion '10.3.4'
+    configFile = file('/google_checks.xml')
+    configProperties = [
+        'org.checkstyle.google.suppressionfilter.config': "$projectDir/config/checkstyle/suppressions.xml"
+    ]
+    maxWarnings = 0
+}
+
+jib {
+    from {
+        image = 'eclipse-temurin:17-jre-alpine'
+    }
+    to {
+        image = "ghcr.io/podaac/swodlr-api:${version}"
+
+        def headRef = System.env.GITHUB_REF_NAME ? System.env.GITHUB_REF_NAME : ""
+        if (headRef.equals('develop') || headRef.equals('main')) {
+            tags = [headRef]
+        } else if (headRef.startsWith('release')) {
+            tags = ['rc']
+        }
+    }
+    container {
+        format = "OCI"
+        labels = [
+            'org.opencontainers.image.source': 'https://github.com/podaac/swodlr',
+            'org.opencontainers.image.licenses': 'Apache-2.0'
+        ]
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.named('check').configure {
+    dependsOn(tasks.named('jacocoTestReport'))
 }

@@ -7,11 +7,11 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class UserController {
-    @Autowired
-    UserRepository userRepository;
+  @Autowired
+  UserRepository userRepository;
 
-    @QueryMapping
-    public User currentUser(@ContextValue User user) {
-        return user;
-    }
+  @QueryMapping
+  public User currentUser(@ContextValue User user) {
+    return user;
+  }
 }
