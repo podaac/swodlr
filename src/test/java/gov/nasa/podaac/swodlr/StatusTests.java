@@ -61,7 +61,7 @@ public class StatusTests {
 
   @BeforeAll
   public void setupDefinition() {
-    definition = new RasterDefinition();
+    definition = TestUtils.dummyDefinition();
     rasterDefinitionRepository.save(definition);
   }
 

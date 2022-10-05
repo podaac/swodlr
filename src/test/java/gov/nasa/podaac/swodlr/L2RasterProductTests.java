@@ -46,7 +46,7 @@ public class L2RasterProductTests {
 
   @BeforeAll
   public void setupDefinition() {
-    definition = new RasterDefinition();
+    definition = TestUtils.dummyDefinition();
     rasterDefinitionRepository.save(definition);
   }
 
@@ -125,7 +125,7 @@ public class L2RasterProductTests {
     LocalDateTime start = LocalDateTime.now();
 
     // Create new mock products to fill pages for pagination
-    RasterDefinition definition = new RasterDefinition();
+    RasterDefinition definition = TestUtils.dummyDefinition();
     rasterDefinitionRepository.save(definition);
 
     for (int i = 0; i < pageLimit * pages; i++) {
