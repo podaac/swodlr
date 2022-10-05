@@ -4,6 +4,8 @@ on:
     paths-ignore:
       - 'build.gradle'
       - 'bumpver.toml'
+    tags-ignore:
+      - '*'
 jobs:
   build-api:
     name: build, lint, and test API
