@@ -1,4 +1,4 @@
-enum State {
+enum GridType {
     UTM
     GEO
 }

@@ -37,7 +37,7 @@ public class RasterDefinition {
    * latitude-longitude grids
    * 
    * - For UTM grids: (100, 125, 200, 250, 500, 1000, 2500, 5000,
-   * 100001 meters
+   * 10000 meters
    * - For latitude-longitude grids: [3, 4, 5, 6, 8, 15, 30, 60,
    * 180, 300] arc-seconds
    * 
