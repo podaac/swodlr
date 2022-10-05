@@ -3,6 +3,7 @@ package gov.nasa.podaac.swodlr.rasterdefinition;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -22,13 +23,13 @@ public class RasterDefinition {
    * true - an overlapping, 256 km x 128 km granule extent
    */
   @Column(nullable = false)
-  public boolean outputGranuleExtentFlag;
+  public Boolean outputGranuleExtentFlag;
 
   /*
    * Type of the raster sampling grid
    */
   @Column(nullable = false)
-  @Enumerated
+  @Enumerated(EnumType.STRING)
   public GridType outputSamplingGridType;
 
   /*
@@ -45,7 +46,7 @@ public class RasterDefinition {
    */
   @Column(nullable = false)
   @Range(min = 3, max = 10000)
-  public int rasterResolution;
+  public Integer rasterResolution;
 
   /*
    * This parameter allows the UTM grid to use a zone within
@@ -58,7 +59,7 @@ public class RasterDefinition {
    */
   @Column
   @Range(min = -1, max = 1)
-  public int utmZoneAdjust;
+  public Integer utmZoneAdjust;
 
   /*
    * This parameter allows the UTM grid to use an MGRS
@@ -72,7 +73,7 @@ public class RasterDefinition {
    */
   @Column
   @Range(min = -1, max = 1)
-  public int mgrsBandAdjust;
+  public Integer mgrsBandAdjust;
 
   public RasterDefinition() {
     id = UUID.randomUUID();

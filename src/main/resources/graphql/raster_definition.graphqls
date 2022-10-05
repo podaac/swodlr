@@ -1,8 +1,7 @@
 type RasterDefinition {
     id: ID!
     outputGranuleExtentFlag: Boolean!
-    outputSamplingGridType: String!
-    rasterResolution: GridType!
+    outputSamplingGridType: GridType!
     rasterResolution: Int!
     utmZoneAdjust: Int!
     mgrsBandAdjust: Int!
