@@ -19,6 +19,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-graphql'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.postgresql:postgresql:42.5.0'
     implementation 'com.zaxxer:HikariCP:5.0.1'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -43,7 +44,7 @@ jib {
     to {
         image = "ghcr.io/podaac/swodlr-api:${version}"
 
-        def headRef = System.env.GITHUB_REF_NAME
+        def headRef = System.env.GITHUB_REF_NAME ? System.env.GITHUB_REF_NAME : ""
         if (headRef.equals('develop') || headRef.equals('main')) {
             tags = [headRef]
         } else if (headRef.startsWith('release')) {
