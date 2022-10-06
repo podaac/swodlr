@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.Range;
 @Table(name = "RasterDefinitions")
 public class RasterDefinition {
   @Id
-  private UUID id;
+  public UUID id;
 
   /*
    * Flag indicating whether the SAS should produce a non-
@@ -81,5 +81,20 @@ public class RasterDefinition {
 
   public UUID getId() {
     return id;
+  }
+
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+
+    sb.append("RasterDefinition (");
+    sb.append("id = %s, ".formatted(this.id));
+    sb.append("outputGranuleExtentFlag = %s, ".formatted(this.outputGranuleExtentFlag));
+    sb.append("outputSamplingGridType = %s, ".formatted(this.outputSamplingGridType));
+    sb.append("rasterResolution = %s, ".formatted(this.rasterResolution));
+    sb.append("utmZoneAdjust = %s, ".formatted(this.utmZoneAdjust));
+    sb.append("mgrsBandAdjust = %s".formatted(this.mgrsBandAdjust));
+    sb.append(")");
+
+    return sb.toString();
   }
 }
