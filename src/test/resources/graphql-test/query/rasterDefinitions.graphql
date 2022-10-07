@@ -1,5 +1,10 @@
-query {
-    rasterDefinitions {
+query($id: ID, $outputGranuleExtentFlag: Boolean, $outputSamplingGridType: GridType, $rasterResolution: Int, $utmZoneAdjust: Int, $mgrsBandAdjust: Int) {
+    rasterDefinitions(id: $id, outputGranuleExtentFlag: $outputGranuleExtentFlag, outputSamplingGridType: $outputSamplingGridType, rasterResolution: $rasterResolution, utmZoneAdjust: $utmZoneAdjust, mgrsBandAdjust: $mgrsBandAdjust) {
         id
+        outputGranuleExtentFlag
+        outputSamplingGridType
+        rasterResolution
+        utmZoneAdjust
+        mgrsBandAdjust
     }
 }
