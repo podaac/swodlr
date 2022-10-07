@@ -100,8 +100,8 @@ public class RasterDefinitionTests {
     }
 
     for (RasterDefinition definition : definitions.values()) {
-      int bound = definition.outputSamplingGridType == GridType.UTM ?
-          parameters.length : parameters.length - 2;
+      int bound = definition.outputSamplingGridType == GridType.UTM
+          ? parameters.length : parameters.length - 2;
       String paramName = parameters[random.nextInt(bound)];
       Object paramValue = getDefinitionField(paramName, definition);
 
@@ -111,10 +111,14 @@ public class RasterDefinitionTests {
           .execute()
           .path("rasterDefinitions[*].id")
           .entityList(UUID.class)
-          .satisfies(uuidList -> uuidList.forEach(uuid -> {
-            assertEquals(paramValue, getDefinitionField(paramName, definitions.get(uuid)));
-            seen.add(uuid);
-          }));
+          .satisfies(uuidList -> {
+            assertTrue(uuidList.contains(definition.getId()));
+
+            uuidList.forEach(uuid -> {
+              assertEquals(paramValue, getDefinitionField(paramName, definitions.get(uuid)));
+              seen.add(uuid);
+            });
+          });
     }
 
     assertEquals(definitions.size(), seen.size());
@@ -134,8 +138,10 @@ public class RasterDefinitionTests {
         return definition.utmZoneAdjust;
       case "mgrsBandAdjust":
         return definition.mgrsBandAdjust;
+      default:
+        // We shouldn't end up here
+        assert false;
+        return null;
     }
-
-    return null;
   }
 }

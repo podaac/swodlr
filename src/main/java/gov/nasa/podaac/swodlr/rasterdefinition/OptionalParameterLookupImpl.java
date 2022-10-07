@@ -39,7 +39,8 @@ public class OptionalParameterLookupImpl implements OptionalParameterLookup {
     Query<RasterDefinition> query = session.createNativeQuery(statement, RasterDefinition.class);
     query.setParameter("id", id, UUIDCharType.INSTANCE);
     query.setParameter("outputGranuleExtentFlag", outputGranuleExtentFlag, BooleanType.INSTANCE);
-    query.setParameter("outputSamplingGridType", outputSamplingGridType != null ? outputSamplingGridType.toString() : null, StringType.INSTANCE);
+    query.setParameter("outputSamplingGridType", outputSamplingGridType != null
+        ? outputSamplingGridType.toString() : null, StringType.INSTANCE);
     query.setParameter("rasterResolution", rasterResolution, IntegerType.INSTANCE);
     query.setParameter("utmZoneAdjust", utmZoneAdjust, IntegerType.INSTANCE);
     query.setParameter("mgrsBandAdjust", mgrsBandAdjust, IntegerType.INSTANCE);
