@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.Range;
 @Table(name = "RasterDefinitions")
 public class RasterDefinition {
   @Id
-  public UUID id;
+  private UUID id;
 
   /*
    * Flag indicating whether the SAS should produce a non-

@@ -8,7 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.hibernate.type.BooleanType;
 import org.hibernate.type.IntegerType;
-import org.hibernate.type.StringNVarcharType;
+import org.hibernate.type.StringType;
 import org.hibernate.type.UUIDCharType;
 
 public class OptionalParameterLookupImpl implements OptionalParameterLookup {
@@ -26,12 +26,12 @@ public class OptionalParameterLookupImpl implements OptionalParameterLookup {
   ) {  
     String statement = """
       SELECT * FROM \"RasterDefinitions\" WHERE
-      \"id\" = COALESCE(:id, \"id\") AND
-      \"outputGranuleExtentFlag\" = COALESCE(:outputGranuleExtentFlag, \"outputGranuleExtentFlag\") AND
-      \"outputSamplingGridType\" = COALESCE(:outputSamplingGridType, \"outputSamplingGridType\") AND
-      \"rasterResolution\" = COALESCE(:rasterResolution, \"rasterResolution\") AND
-      \"utmZoneAdjust\" = COALESCE(:utmZoneAdjust, \"utmZoneAdjust\") AND
-      \"mgrsBandAdjust\" = COALESCE(:mgrsBandAdjust, \"mgrsBandAdjust\")
+      (:id is NULL OR \"id\" = :id) AND
+      (:outputGranuleExtentFlag is NULL OR \"outputGranuleExtentFlag\" = :outputGranuleExtentFlag) AND
+      (:outputSamplingGridType is NULL OR \"outputSamplingGridType\" = :outputSamplingGridType) AND
+      (:rasterResolution is NULL OR \"rasterResolution\" = :rasterResolution) AND
+      (:utmZoneAdjust is NULL OR \"utmZoneAdjust\" = :utmZoneAdjust) AND
+      (:mgrsBandAdjust is NULL OR \"mgrsBandAdjust\" = :mgrsBandAdjust)
       ORDER BY id
         """;
     
@@ -39,7 +39,7 @@ public class OptionalParameterLookupImpl implements OptionalParameterLookup {
     Query<RasterDefinition> query = session.createNativeQuery(statement, RasterDefinition.class);
     query.setParameter("id", id, UUIDCharType.INSTANCE);
     query.setParameter("outputGranuleExtentFlag", outputGranuleExtentFlag, BooleanType.INSTANCE);
-    query.setParameter("outputSamplingGridType", outputSamplingGridType, StringNVarcharType.INSTANCE);
+    query.setParameter("outputSamplingGridType", outputSamplingGridType != null ? outputSamplingGridType.toString() : null, StringType.INSTANCE);
     query.setParameter("rasterResolution", rasterResolution, IntegerType.INSTANCE);
     query.setParameter("utmZoneAdjust", utmZoneAdjust, IntegerType.INSTANCE);
     query.setParameter("mgrsBandAdjust", mgrsBandAdjust, IntegerType.INSTANCE);
