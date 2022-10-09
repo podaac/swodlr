@@ -18,7 +18,9 @@ public class SwodlrExceptionResolver extends DataFetcherExceptionResolverAdapter
   @Override
   public List<GraphQLError> resolveToMultipleErrors(Throwable ex, DataFetchingEnvironment env) {
     if (ex instanceof SwodlrException) {
-      return Collections.singletonList(GraphqlErrorBuilder.newError(env).message(ex.getMessage()).build());
+      return Collections.singletonList(
+        GraphqlErrorBuilder.newError(env).message(ex.getMessage()).build()
+      );
     } else if (ex instanceof TransactionSystemException) {
       var rootThrowable = ExceptionUtils.getRootCause(ex);
       if (!(rootThrowable instanceof ConstraintViolationException constraintViolationException)) {
@@ -32,6 +34,10 @@ public class SwodlrExceptionResolver extends DataFetcherExceptionResolverAdapter
         var error = GraphqlErrorBuilder
             .newError(env)
             .errorType(ErrorType.ValidationError)
+            .extensions(Collections.singletonMap(
+                "property",
+                violation.getPropertyPath().toString()
+            ))
             .message(violation.getMessage())
             .build();
 
