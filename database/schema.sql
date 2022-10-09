@@ -15,6 +15,9 @@ CREATE TABLE "RasterDefinitions" (
 CREATE TABLE "L2RasterProducts" (
     "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY,
     "definitionID" uuid NOT NULL,
+    "cycle" int NOT NULL,
+    "pass" int NOT NULL,
+    "scene" int NOT NULL,
     FOREIGN KEY ("definitionID") REFERENCES "RasterDefinitions" ("id")
 );
 

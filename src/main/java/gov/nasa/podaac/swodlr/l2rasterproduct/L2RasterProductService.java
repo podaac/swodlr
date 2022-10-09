@@ -29,14 +29,15 @@ public class L2RasterProductService {
   ProductHistoryRepository productHistoryRepository;
 
   @Transactional
-  public L2RasterProduct createL2RasterProduct(User user, UUID definitionId) {
+  public L2RasterProduct createL2RasterProduct(User user, UUID definitionId,
+      int cycle, int pass, int scene) {
     var queryResult = rasterDefinitionRepository.findById(definitionId);
     if (!queryResult.isPresent()) {
       throw new SwodlrException("Definition not found");
     }
 
     RasterDefinition definition = queryResult.get();
-    L2RasterProduct product = new L2RasterProduct(definition);
+    L2RasterProduct product = new L2RasterProduct(definition, cycle, pass, scene);
     Status status = new Status(product, State.NEW);
     ProductHistory history = new ProductHistory(user, product);
 

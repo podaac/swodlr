@@ -21,8 +21,9 @@ public class L2RasterProductController {
   L2RasterProductRepository l2RasterProductRepository;
 
   @MutationMapping
-  public L2RasterProduct createL2RasterProduct(@ContextValue User user, @Argument UUID definition) {
-    return l2RasterProductService.createL2RasterProduct(user, definition);
+  public L2RasterProduct createL2RasterProduct(@ContextValue User user, @Argument UUID definition,
+      @Argument int cycle, @Argument int scene, @Argument int pass) {
+    return l2RasterProductService.createL2RasterProduct(user, definition, cycle, scene, pass);
   }
 
   @SchemaMapping(typeName = "Status", field = "product")
