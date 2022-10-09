@@ -26,7 +26,7 @@ public class RasterDefinitionQueryImpl implements RasterDefinitionQuery {
   ) {  
     String statement = """
       SELECT * FROM \"RasterDefinitions\" WHERE
-      (:id is NULL OR \"id\" = :id) AND
+      (:id is NULL OR \"id\" = CAST(:id as UUID)) AND
       (:outputGranuleExtentFlag is NULL OR \"outputGranuleExtentFlag\" = :outputGranuleExtentFlag) AND
       (:outputSamplingGridType is NULL OR \"outputSamplingGridType\" = :outputSamplingGridType) AND
       (:rasterResolution is NULL OR \"rasterResolution\" = :rasterResolution) AND
