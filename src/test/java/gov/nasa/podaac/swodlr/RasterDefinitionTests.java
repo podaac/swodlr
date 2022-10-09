@@ -87,11 +87,11 @@ public class RasterDefinitionTests {
       RasterDefinition definition = new RasterDefinition();
       definition.outputGranuleExtentFlag = random.nextBoolean();
       definition.outputSamplingGridType = gridTypes.get(random.nextInt(2));
-      definition.rasterResolution = random.nextInt(10000 - 2) + 3;
+      definition.rasterResolution = random.nextInt(3, 10000 + 1);
       
       if (definition.outputSamplingGridType == GridType.UTM) {
-        definition.utmZoneAdjust = random.nextInt(3) - 1;
-        definition.mgrsBandAdjust = random.nextInt(3) - 1;;
+        definition.utmZoneAdjust = random.nextInt(-1, 1 + 1);
+        definition.mgrsBandAdjust = random.nextInt(-1, 1 + 1);
       }
 
       definitions.put(definition.getId(), definition);
