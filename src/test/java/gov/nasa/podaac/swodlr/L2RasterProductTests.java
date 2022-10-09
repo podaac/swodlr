@@ -110,6 +110,41 @@ public class L2RasterProductTests {
   }
 
   @Test
+  public void createL2RasterProductWithInvalidCps() {
+    Set<String> invalidParams = new HashSet<>(Set.of(
+        "cycle", "pass", "scene"
+    ));
+
+    graphQlTester
+        .documentName("mutation/createL2RasterProduct")
+        .variable("definition", definition.getId())
+        .variable("cycle", -1)
+        .variable("pass", -1)
+        .variable("scene", -1)
+        .execute()
+        .errors()
+        .satisfy(errors -> {
+          assertEquals(
+              invalidParams.size(),
+              errors.size(),
+              "%d != %d".formatted(invalidParams.size(), errors.size())
+          );
+
+          for (var error : errors) {
+            assertEquals("createL2RasterProduct", error.getPath());
+            assertEquals("ValidationError", error.getExtensions().get("classification"));
+            assertEquals("must be greater than or equal to 0", error.getMessage());
+
+            var prop = error.getExtensions().get("property");
+            assertTrue(invalidParams.contains(prop));
+            invalidParams.remove(prop);
+          }
+
+          assertEquals(0, invalidParams.size());
+        });
+  }
+
+  @Test
   public void createL2RasterProductWithInvalidDefinition() {
     graphQlTester
         .documentName("mutation/createL2RasterProduct")
