@@ -11,7 +11,7 @@ import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 import org.hibernate.type.UUIDCharType;
 
-public class OptionalParameterLookupImpl implements OptionalParameterLookup {
+public class RasterDefinitionQueryImpl implements RasterDefinitionQuery {
   @PersistenceContext
   private EntityManager entityManager;
 

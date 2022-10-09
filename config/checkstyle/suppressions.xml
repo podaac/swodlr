@@ -11,7 +11,7 @@
       files="L2RasterProductRepository\.java"
       lines="20,22"/>
   <suppress checks="LineLength"
-      files="OptionalParameterLookupImpl\.java"
+      files="RasterDefinitionQueryImpl\.java"
       lines="30"/>
 
   <suppress checks="LineLength"

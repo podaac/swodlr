@@ -5,6 +5,6 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RasterDefinitionRepository extends JpaRepository<RasterDefinition, UUID>,
-    OptionalParameterLookup {
+    RasterDefinitionQuery {
   List<RasterDefinition> findById(RasterDefinition definition);
 }
