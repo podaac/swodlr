@@ -100,6 +100,12 @@ public class RasterDefinitionTests {
 
     for (RasterDefinition definition : definitions.values()) {
       for (String paramName : parameters) {
+        var paramVal = getDefinitionField(paramName, definition);
+        if (paramVal == null) {
+          // Skip when value is null b/c it doesn't filter
+          return;
+        }
+
         graphQlTester
             .documentName("query/rasterDefinitions")
             .variable(paramName, getDefinitionField(paramName, definition))
@@ -109,15 +115,9 @@ public class RasterDefinitionTests {
             .satisfies(uuidList -> {
               assertTrue(uuidList.contains(definition.getId()));
 
-              var expectedVal = getDefinitionField(paramName, definition);
-              if (expectedVal == null) {
-                // Skip next section when expected is null b/c it doesn't filter
-                return;
-              }
-
               for (UUID uuid : uuidList) {
                 var testVal = getDefinitionField(paramName, definitions.get(uuid));
-                assertEquals(expectedVal, testVal, "%s: %s != %s".formatted(paramName, expectedVal, testVal));
+                assertEquals(paramVal, testVal, "%s: %s != %s".formatted(paramName, paramVal, testVal));
               }
             });
       }
