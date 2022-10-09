@@ -80,7 +80,6 @@ public class RasterDefinitionTests {
     final Random random = new Random();
     final List<GridType> gridTypes = Lists.newArrayList(GridType.values());
     final Map<UUID, RasterDefinition> definitions = new HashMap<>();
-    final Set<UUID> seen = new HashSet<UUID>();
 
     final String[] parameters = {"id", "outputGranuleExtentFlag", "outputSamplingGridType", "rasterResolution", "utmZoneAdjust", "mgrsBandAdjust"};
 
@@ -100,28 +99,29 @@ public class RasterDefinitionTests {
     }
 
     for (RasterDefinition definition : definitions.values()) {
-      int bound = definition.outputSamplingGridType == GridType.UTM
-          ? parameters.length : parameters.length - 2;
-      String paramName = parameters[random.nextInt(bound)];
-      Object paramValue = getDefinitionField(paramName, definition);
+      for (String paramName : parameters) {
+        graphQlTester
+            .documentName("query/rasterDefinitions")
+            .variable(paramName, getDefinitionField(paramName, definition))
+            .execute()
+            .path("rasterDefinitions[*].id")
+            .entityList(UUID.class)
+            .satisfies(uuidList -> {
+              assertTrue(uuidList.contains(definition.getId()));
 
-      graphQlTester
-          .documentName("query/rasterDefinitions")
-          .variable(paramName, paramValue)
-          .execute()
-          .path("rasterDefinitions[*].id")
-          .entityList(UUID.class)
-          .satisfies(uuidList -> {
-            assertTrue(uuidList.contains(definition.getId()));
+              var expectedVal = getDefinitionField(paramName, definition);
+              if (expectedVal == null) {
+                // Skip next section when expected is null b/c it doesn't filter
+                return;
+              }
 
-            uuidList.forEach(uuid -> {
-              assertEquals(paramValue, getDefinitionField(paramName, definitions.get(uuid)));
-              seen.add(uuid);
+              for (UUID uuid : uuidList) {
+                var testVal = getDefinitionField(paramName, definitions.get(uuid));
+                assertEquals(expectedVal, testVal, "%s: %s != %s".formatted(paramName, expectedVal, testVal));
+              }
             });
-          });
+      }
     }
-
-    assertEquals(definitions.size(), seen.size());
   }
 
   private Object getDefinitionField(String name, RasterDefinition definition) {
