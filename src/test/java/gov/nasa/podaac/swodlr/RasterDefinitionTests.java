@@ -98,6 +98,7 @@ public class RasterDefinitionTests {
       rasterDefinitionRepository.save(definition);
     }
 
+    /* Single parameter tests */
     for (RasterDefinition definition : definitions.values()) {
       for (String paramName : parameters) {
         var paramVal = getDefinitionField(paramName, definition);
@@ -122,7 +123,6 @@ public class RasterDefinitionTests {
             });
       }
     }
-
 
     /* Multiple parameter tests */
     var testExtentVals = new Boolean[] {true, false};
