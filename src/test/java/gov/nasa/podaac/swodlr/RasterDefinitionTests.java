@@ -103,7 +103,7 @@ public class RasterDefinitionTests {
         var paramVal = getDefinitionField(paramName, definition);
         if (paramVal == null) {
           // Skip when value is null b/c it doesn't filter
-          return;
+          continue;
         }
 
         graphQlTester
@@ -122,6 +122,39 @@ public class RasterDefinitionTests {
             });
       }
     }
+
+
+    /* Multiple parameter tests */
+    var testExtentVals = new Boolean[] {true, false};
+    var testGridSamplingTypes = GridType.values();
+    Set<UUID> seen = new HashSet<>();
+
+    for (boolean extentVal : testExtentVals) {
+      for (GridType gridType : testGridSamplingTypes) {
+        graphQlTester
+            .documentName("query/rasterDefinitions")
+            .variable("outputGranuleExtentFlag", extentVal)
+            .variable("outputSamplingGridType", gridType)
+            .execute()
+            .path("rasterDefinitions[*].id")
+            .entityList(UUID.class)
+            .satisfies(uuidList -> {
+              for (UUID uuid : uuidList) {
+                var testExtentFlag = definitions.get(uuid).outputGranuleExtentFlag;
+                var testGridType = definitions.get(uuid).outputSamplingGridType;
+
+                assertEquals(extentVal, testExtentFlag,
+                    "outputGranuleExtentFlag: %s != %s".formatted(extentVal, testExtentFlag));
+                assertEquals(gridType, testGridType,
+                    "outputSamplingGridType: %s != %s".formatted(gridType, testGridType));
+
+                seen.add(uuid);
+              }
+            });
+      }
+    }
+
+    assertEquals(definitions.size(), seen.size());
   }
 
   private Object getDefinitionField(String name, RasterDefinition definition) {
