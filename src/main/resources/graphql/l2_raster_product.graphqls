@@ -1,5 +1,8 @@
 type L2RasterProduct {
     id: ID!
     definition: RasterDefinition!
+    cycle: Int!
+    pass: Int!
+    scene: Int!
     status(limit: Int = 10): [Status!]!
 }

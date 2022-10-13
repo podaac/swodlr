@@ -61,7 +61,7 @@ public class StatusTests {
 
   @BeforeAll
   public void setupDefinition() {
-    definition = new RasterDefinition();
+    definition = TestUtils.dummyDefinition();
     rasterDefinitionRepository.save(definition);
   }
 
@@ -90,7 +90,10 @@ public class StatusTests {
     /* Setup mock data */
     UUID productId = graphQlTester
         .documentName("mutation/createL2RasterProduct")
-        .variable("rasterDefinitionID", definition.getId())
+        .variable("definition", definition.getId())
+        .variable("cycle", 0)
+        .variable("pass", 0)
+        .variable("scene", 0)
         .execute()
         .path("createL2RasterProduct.id")
         .entity(UUID.class)

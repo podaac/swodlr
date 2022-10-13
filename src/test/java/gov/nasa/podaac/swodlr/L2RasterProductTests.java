@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterAll;
@@ -46,7 +47,7 @@ public class L2RasterProductTests {
 
   @BeforeAll
   public void setupDefinition() {
-    definition = new RasterDefinition();
+    definition = TestUtils.dummyDefinition();
     rasterDefinitionRepository.save(definition);
   }
 
@@ -64,9 +65,17 @@ public class L2RasterProductTests {
   public void createL2RasterProductWithValidDefinition() {
     LocalDateTime start = LocalDateTime.now();
 
+    Random random = new Random();
+    int cycle = random.nextInt(Integer.MAX_VALUE);
+    int pass = random.nextInt(Integer.MAX_VALUE);
+    int scene = random.nextInt(Integer.MAX_VALUE);
+
     Response response = graphQlTester
         .documentName("mutation/createL2RasterProduct")
-        .variable("rasterDefinitionID", definition.getId())
+        .variable("definition", definition.getId())
+        .variable("cycle", cycle)
+        .variable("pass", pass)
+        .variable("scene", scene)
         .execute();
 
     /* -- Definition -- */
@@ -101,10 +110,48 @@ public class L2RasterProductTests {
   }
 
   @Test
+  public void createL2RasterProductWithInvalidCps() {
+    Set<String> invalidParams = new HashSet<>(Set.of(
+        "cycle", "pass", "scene"
+    ));
+
+    graphQlTester
+        .documentName("mutation/createL2RasterProduct")
+        .variable("definition", definition.getId())
+        .variable("cycle", -1)
+        .variable("pass", -1)
+        .variable("scene", -1)
+        .execute()
+        .errors()
+        .satisfy(errors -> {
+          assertEquals(
+              invalidParams.size(),
+              errors.size(),
+              "%d != %d".formatted(invalidParams.size(), errors.size())
+          );
+
+          for (var error : errors) {
+            assertEquals("createL2RasterProduct", error.getPath());
+            assertEquals("ValidationError", error.getExtensions().get("classification"));
+            assertEquals("must be greater than or equal to 0", error.getMessage());
+
+            var prop = error.getExtensions().get("property");
+            assertTrue(invalidParams.contains(prop));
+            invalidParams.remove(prop);
+          }
+
+          assertEquals(0, invalidParams.size());
+        });
+  }
+
+  @Test
   public void createL2RasterProductWithInvalidDefinition() {
     graphQlTester
         .documentName("mutation/createL2RasterProduct")
-        .variable("rasterDefinitionID", Utils.NULL_UUID)
+        .variable("definition", Utils.NULL_UUID)
+        .variable("cycle", 0)
+        .variable("pass", 0)
+        .variable("scene", 0)
         .execute()
         .errors()
         .satisfy(errors -> {
@@ -125,13 +172,16 @@ public class L2RasterProductTests {
     LocalDateTime start = LocalDateTime.now();
 
     // Create new mock products to fill pages for pagination
-    RasterDefinition definition = new RasterDefinition();
+    RasterDefinition definition = TestUtils.dummyDefinition();
     rasterDefinitionRepository.save(definition);
 
     for (int i = 0; i < pageLimit * pages; i++) {
       graphQlTester
           .documentName("mutation/createL2RasterProduct")
-          .variable("rasterDefinitionID", definition.getId())
+          .variable("definition", definition.getId())
+          .variable("cycle", i)
+          .variable("pass", i)
+          .variable("scene", i)
           .executeAndVerify();
     }
 
@@ -166,6 +216,39 @@ public class L2RasterProductTests {
           .path("currentUser.products[*].definition.id")
           .entityList(UUID.class)
           .containsExactly(Collections.nCopies(pageLimit, definition.getId()).toArray(UUID[]::new));
+
+      /* -- Cycle -- */
+      response
+          .path("currentUser.products[*].cycle")
+          .entityList(Integer.class)
+          .satisfies(ids -> {
+            int j = pages;
+            for (int id : ids) {
+              assertEquals(--j, id);
+            }
+          });
+
+      /* -- Pass -- */
+      response
+          .path("currentUser.products[*].pass")
+          .entityList(Integer.class)
+          .satisfies(ids -> {
+            int j = pages;
+            for (int id : ids) {
+              assertEquals(--j, id);
+            }
+          });
+
+      /* -- Scene -- */
+      response
+          .path("currentUser.products[*].scene")
+          .entityList(Integer.class)
+          .satisfies(ids -> {
+            int j = pages;
+            for (int id : ids) {
+              assertEquals(--j, id);
+            }
+          });
 
       /* -- Statuses -- */
       // State

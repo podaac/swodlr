@@ -10,6 +10,9 @@
   <suppress checks="LineLength"
       files="L2RasterProductRepository\.java"
       lines="20,22"/>
+  <suppress checks="LineLength"
+      files="RasterDefinitionQueryImpl\.java"
+      lines="57"/>
 
   <suppress checks="LineLength"
       files=".+Tests\.java"/>

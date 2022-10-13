@@ -1,9 +1,12 @@
-mutation ($rasterDefinitionID: ID!) {
-	createL2RasterProduct(definition: $rasterDefinitionID) {
+mutation ($definition: ID!, $cycle: Int!, $pass: Int! $scene: Int!) {
+	createL2RasterProduct(definition: $definition, cycle: $cycle, pass: $pass, scene: $scene) {
 		id
 		definition {
             id
         }
+        cycle
+        pass
+        scene
         status {
             id
 			timestamp
