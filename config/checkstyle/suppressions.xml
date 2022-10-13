@@ -12,7 +12,7 @@
       lines="20,22"/>
   <suppress checks="LineLength"
       files="RasterDefinitionQueryImpl\.java"
-      lines="53"/>
+      lines="57"/>
 
   <suppress checks="LineLength"
       files=".+Tests\.java"/>
