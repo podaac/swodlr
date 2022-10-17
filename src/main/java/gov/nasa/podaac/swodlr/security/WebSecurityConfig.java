@@ -15,7 +15,8 @@ public class WebSecurityConfig {
       .authorizeExchange(authorize -> {
         authorize.anyExchange().authenticated();
       })
-      .oauth2Client();
+      .oauth2Client().and()
+      .oauth2Login();
 
     return http.build();
   }
