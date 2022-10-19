@@ -35,9 +35,11 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.core.io.Resource;
 import org.springframework.graphql.test.tester.GraphQlTester.Response;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@ActiveProfiles({"test"})
 @TestInstance(Lifecycle.PER_CLASS)
 @TestPropertySource({"file:./src/main/resources/application.properties", "classpath:application.properties"})
 @AutoConfigureHttpGraphQlTester

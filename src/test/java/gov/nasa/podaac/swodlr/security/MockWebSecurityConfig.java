@@ -7,18 +7,15 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @EnableWebFluxSecurity
-@Profile({"!test"})
-public class WebSecurityConfig {
+@Profile({"test"})
+public class MockWebSecurityConfig {
   @Bean
   public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
     http
-      .cors().and()
-      .csrf().and()
-      .authorizeExchange(authorize -> {
-        authorize.anyExchange().authenticated();
-      })
-      .oauth2Client().and()
-      .oauth2Login();
+        .csrf().disable()
+        .authorizeExchange(exchange -> {
+          exchange.anyExchange().permitAll();
+        });
 
     return http.build();
   }
