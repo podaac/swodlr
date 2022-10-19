@@ -13,8 +13,8 @@ public class MockWebSecurityConfig {
   public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
     http
         .csrf().disable()
-        .authorizeExchange(exchange -> {
-          exchange.anyExchange().permitAll();
+        .authorizeExchange(authorization -> {
+          authorization.anyExchange().permitAll();
         });
 
     return http.build();
