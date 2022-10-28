@@ -7,7 +7,6 @@ import com.nimbusds.jose.JWEHeader;
 import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jose.Payload;
 import gov.nasa.podaac.swodlr.security.SwodlrSecurityProperties;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -183,6 +182,7 @@ class JweSession implements WebSession, Serializable {
     JWEObject jwe = generateJwe();
     ResponseCookie cookie = ResponseCookie.from(SESSION_COOKIE_NAME, jwe.serialize())
         .maxAge(Duration.between(Instant.now(), expiration))
+        .path("/")
         //.secure(true) - TODO: Set this based on env
         //.httpOnly(true) - TODO: Set this based on env
         .build();
