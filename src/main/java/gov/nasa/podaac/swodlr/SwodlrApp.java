@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
-@ConfigurationPropertiesScan({"gov.nasa.podaac.swodlr"})
+@ConfigurationPropertiesScan
 public class SwodlrApp {
   public static void main(String[] args) {
     SpringApplication.run(SwodlrApp.class, args);
