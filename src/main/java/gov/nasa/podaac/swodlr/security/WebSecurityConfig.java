@@ -5,17 +5,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.DelegatingServerAuthenticationSuccessHandler;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
-import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
 
 @EnableWebFluxSecurity
 @Profile({"!test"})
 public class WebSecurityConfig {
   @Autowired
-  private ServerAuthenticationSuccessHandler userBootstrapHandler;
+  private UserBootstrapAuthenticationSuccessHandler userBootstrapAuthenticationSuccessHandler;
 
   @Bean
   public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -29,8 +27,8 @@ public class WebSecurityConfig {
         .oauth2Login((login) -> {
           var redirectingHandler = new RedirectServerAuthenticationSuccessHandler();
           var authenticationSuccessHandler = new DelegatingServerAuthenticationSuccessHandler(
-              userBootstrapHandler, redirectingHandler);
-
+              userBootstrapAuthenticationSuccessHandler, redirectingHandler);
+          
           login.authenticationSuccessHandler(authenticationSuccessHandler);
         });
 
