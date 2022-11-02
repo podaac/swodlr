@@ -20,6 +20,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpCookie;
@@ -94,7 +98,7 @@ class JweSession implements WebSession, Serializable {
       return Mono.error(ex);
     }
 
-    logger.debug("Cookie generated: {}".formatted(cookie.getValue()));
+    logger.debug("Cookie generated: %s".formatted(cookie.getValue()));
     response.getCookies().set(SESSION_COOKIE_NAME, cookie);
 
     return Mono.empty();
@@ -130,14 +134,14 @@ class JweSession implements WebSession, Serializable {
       }
 
       ServerHttpResponse response = exchange.getResponse();
-      Optional<JweSession> possibleSession = JweSession.deserialize(data);
-      if (possibleSession.isPresent()) {
-        JweSession session = possibleSession.get();
-        session.setResponse(response);
-        return Mono.just(session);
+      Optional<JweSession> result = JweSession.deserialize(data);
+      if (!result.isPresent()) {
+        return Mono.empty();
       }
       
-      return Mono.empty();
+      JweSession session = result.get();
+      session.setResponse(response);
+      return Mono.just(session);
     });
   }
 
@@ -201,11 +205,14 @@ class JweSession implements WebSession, Serializable {
   }
 
   private byte[] serialize() {
+    Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
+
     ByteArrayOutputStream arrayStream = new ByteArrayOutputStream();
+    DeflaterOutputStream deflaterStream = new DeflaterOutputStream(arrayStream, deflater);
     ObjectOutputStream objectStream;
 
     try {
-      objectStream = new ObjectOutputStream(arrayStream);
+      objectStream = new ObjectOutputStream(deflaterStream);
       
       // Store response object temporarily so it's not serialized
       ServerHttpResponse response = this.response;
@@ -213,6 +220,7 @@ class JweSession implements WebSession, Serializable {
       
       objectStream.writeObject(this);
       objectStream.flush();
+      objectStream.close();
 
       // Restore response object
       this.response = response;
@@ -226,12 +234,14 @@ class JweSession implements WebSession, Serializable {
 
   private static Optional<JweSession> deserialize(byte[] buffer) {
     ByteArrayInputStream arrayStream = new ByteArrayInputStream(buffer);
+    InflaterInputStream inflaterStream = new InflaterInputStream(arrayStream);
     ObjectInputStream objectStream;
 
     try {
-      objectStream = new ObjectInputStream(arrayStream);
+      objectStream = new ObjectInputStream(inflaterStream);
       Object data = objectStream.readObject();
       if (data instanceof JweSession) {
+        objectStream.close();
         return Optional.of((JweSession) data);
       }
     } catch (IOException | ClassNotFoundException ex) {
