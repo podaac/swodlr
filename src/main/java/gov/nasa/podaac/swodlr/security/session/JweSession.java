@@ -147,13 +147,17 @@ public class JweSession implements WebSession, Serializable {
       }
         
       JweSession session = result.get();
-      return Mono.just(session);
+      if (!session.isExpired()) {
+        return Mono.just(session);
+      }
+      
+      return Mono.empty();
     });
   }
 
   @Override
   public boolean isExpired() {
-    return Instant.now().compareTo(this.expiration) <= 0;
+    return Instant.now().compareTo(this.expiration) >= 0;
   }
 
   @Override
