@@ -1,6 +1,7 @@
 -- Create tables
 CREATE TABLE "Users" (
-    "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY
+    "id" uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    "username" varchar UNIQUE NOT NULL
 );
 
 CREATE TABLE "RasterDefinitions" (

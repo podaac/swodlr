@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpCookie;
@@ -34,8 +33,8 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
-class JweSession implements WebSession, Serializable {
-  private static final String SESSION_COOKIE_NAME = "session";
+public class JweSession implements WebSession, Serializable {
+  public static final String SESSION_COOKIE_NAME = "session";
 
   private static final Logger logger = LoggerFactory.getLogger(JweSession.class);
   private static SwodlrSecurityProperties securityProperties;
@@ -46,7 +45,7 @@ class JweSession implements WebSession, Serializable {
   private final Instant expiration;
   private final Map<String, Object> attributes;
 
-  public JweSession(ServerHttpResponse response) {
+  JweSession(ServerHttpResponse response) {
     this.id = UUID.randomUUID();
     this.response = response;
     this.creationTime = Instant.now();
@@ -91,17 +90,23 @@ class JweSession implements WebSession, Serializable {
 
   @Override
   public Mono<Void> save() {
-    ResponseCookie cookie;
-    try {
-      cookie = generateCookie();
-    } catch (JOSEException ex) {
-      return Mono.error(ex);
+    if (this.response == null) {
+      return Mono.error(new RuntimeException("response is null"));
     }
 
-    logger.debug("Cookie generated: %s".formatted(cookie.getValue()));
-    response.getCookies().set(SESSION_COOKIE_NAME, cookie);
+    return Mono.defer(() -> {
+      ResponseCookie cookie;
+      try {
+        cookie = generateCookie();
+      } catch (JOSEException ex) {
+        return Mono.error(ex);
+      }
 
-    return Mono.empty();
+      logger.debug("Cookie generated: %s".formatted(cookie.getValue()));
+      response.getCookies().set(SESSION_COOKIE_NAME, cookie);
+
+      return Mono.empty();
+    });
   }
 
   public static void setSecurityProperties(SwodlrSecurityProperties securityProperties) {
@@ -111,36 +116,37 @@ class JweSession implements WebSession, Serializable {
     }
   }
 
-  public static Mono<WebSession> load(ServerWebExchange exchange) {
+  public static Mono<JweSession> load(ServerWebExchange exchange) {
+    ServerHttpRequest request = exchange.getRequest();
+    HttpCookie cookie = request.getCookies().getFirst(SESSION_COOKIE_NAME);
+    if (cookie == null) {
+      return Mono.empty();
+    }
+
+    return load(cookie);
+  }
+
+  public static Mono<JweSession> load(HttpCookie sessionCookie) {
     return Mono.defer(() -> {
-      ServerHttpRequest request = exchange.getRequest();
-
-      HttpCookie cookie = request.getCookies().getFirst(SESSION_COOKIE_NAME);
-      if (cookie == null || cookie.getValue().length() == 0) {
-        return Mono.empty();
-      }
-
       JWEObject jweObject;
       try {
-        jweObject = JWEObject.parse(cookie.getValue());
+        jweObject = JWEObject.parse(sessionCookie.getValue());
         jweObject.decrypt(securityProperties.decrypter());
       } catch (ParseException | JOSEException ex) {
         return Mono.error(ex);
       }
-      
+        
       byte[] data = jweObject.getPayload().toBytes();
       if (data == null) {
         return Mono.empty();
       }
 
-      ServerHttpResponse response = exchange.getResponse();
       Optional<JweSession> result = JweSession.deserialize(data);
       if (!result.isPresent()) {
         return Mono.empty();
       }
-      
+        
       JweSession session = result.get();
-      session.setResponse(response);
       return Mono.just(session);
     });
   }

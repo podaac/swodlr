@@ -18,11 +18,15 @@ public class JweSessionManager implements WebSessionManager {
   public Mono<WebSession> getSession(ServerWebExchange exchange) {
     return JweSession.load(exchange)
         .switchIfEmpty(createSession(exchange))
-        .doOnNext(session -> exchange.getResponse().beforeCommit(() -> session.save()))
+        .doOnNext(session -> {
+          session.setResponse(exchange.getResponse());
+          exchange.getResponse().beforeCommit(() -> session.save());
+        })
+        .cast(WebSession.class)
         .cache();
   }
 
-  private Mono<WebSession> createSession(ServerWebExchange exchange) {
+  private Mono<JweSession> createSession(ServerWebExchange exchange) {
     return Mono.defer(() -> {
       return Mono.just(new JweSession(exchange.getResponse()));
     });
