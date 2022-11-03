@@ -1,6 +1,7 @@
 package gov.nasa.podaac.swodlr.user;
 
 import gov.nasa.podaac.swodlr.l2rasterproduct.L2RasterProduct;
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -13,7 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Users")
-public class User {
+public class User implements Serializable {
   @Id
   private UUID id;
 

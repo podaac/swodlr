@@ -19,13 +19,22 @@ public class SwodlrSecurityProperties {
   private final JWEDecrypter decrypter;
   private final Duration sessionLength;
 
-  public SwodlrSecurityProperties(String sessionEncryptionKey, long sessionLength)
+  /**
+   * Configuration properties for swodlr sessions.
+   *
+   * @param sessionEncryptionKey Encryption key to use for web sessions
+   * @param sessionLength How long sessions are valid
+   * @throws KeyLengthException
+   *     sessionEncryptionKey must be 128 bits (16 bytes), 192 bits (24 bytes), 256 bits (32 bytes),
+   *     384 bits (48 bytes) or 512 bits (64 bytes) long. Must not be null.
+   */
+  public SwodlrSecurityProperties(String sessionEncryptionKey, Duration sessionLength)
       throws KeyLengthException {
     byte[] key = Hex.decode(sessionEncryptionKey);
 
     this.encrypter = new DirectEncrypter(key);
     this.decrypter = new DirectDecrypter(key);
-    this.sessionLength = Duration.ofSeconds(sessionLength);
+    this.sessionLength = sessionLength;
   }
 
   public JWEEncrypter encrypter() {
