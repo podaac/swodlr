@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.security.crypto.codec.Hex;
 
 @ConfigurationProperties("swodlr.security")
-@ConstructorBinding
+@ConstructorBinding 
 public class SwodlrSecurityProperties {
   private final JWEEncrypter encrypter;
   private final JWEDecrypter decrypter;

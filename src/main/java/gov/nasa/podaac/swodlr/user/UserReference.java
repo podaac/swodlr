@@ -1,6 +1,6 @@
 package gov.nasa.podaac.swodlr.user;
 
-import gov.nasa.podaac.swodlr.SwodlrApp;
+import gov.nasa.podaac.swodlr.Utils;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,7 +25,7 @@ public class UserReference implements Serializable {
    * @return a user object wrapped in an optional
    */
   public Optional<User> fetch() {
-    ApplicationContext context = SwodlrApp.context();
+    ApplicationContext context = Utils.applicationContext();
     UserRepository userRepository = context.getBean(UserRepository.class);
     return userRepository.findById(id);
   }
