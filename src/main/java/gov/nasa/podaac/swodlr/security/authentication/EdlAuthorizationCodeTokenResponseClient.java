@@ -1,4 +1,4 @@
-package gov.nasa.podaac.swodlr.security;
+package gov.nasa.podaac.swodlr.security.authentication;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;

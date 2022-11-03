@@ -1,4 +1,4 @@
-package gov.nasa.podaac.swodlr.security;
+package gov.nasa.podaac.swodlr.security.authentication;
 
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import java.net.URI;
