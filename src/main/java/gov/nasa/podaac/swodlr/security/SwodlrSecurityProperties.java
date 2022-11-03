@@ -5,6 +5,7 @@ import com.nimbusds.jose.JWEEncrypter;
 import com.nimbusds.jose.KeyLengthException;
 import com.nimbusds.jose.crypto.DirectDecrypter;
 import com.nimbusds.jose.crypto.DirectEncrypter;
+import com.nimbusds.jose.util.ByteUtils;
 import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
@@ -20,18 +21,22 @@ public class SwodlrSecurityProperties {
   /**
    * Configuration properties for swodlr sessions.
    *
-   * @param sessionEncryptionKey Encryption key to use for web sessions
+   * @param sessionEncryptionKey Encryption key to use for web sessions. Must be 128 bits (16 bytes).
    * @param sessionLength How long sessions are valid
-   * @throws KeyLengthException
-   *     sessionEncryptionKey must be 128 bits (16 bytes), 192 bits (24 bytes), 256 bits (32 bytes),
-   *     384 bits (48 bytes) or 512 bits (64 bytes) long. Must not be null.
    */
-  public SwodlrSecurityProperties(String sessionEncryptionKey, Duration sessionLength)
-      throws KeyLengthException {
+  public SwodlrSecurityProperties(String sessionEncryptionKey, Duration sessionLength) {
     byte[] key = Hex.decode(sessionEncryptionKey);
 
-    this.encrypter = new DirectEncrypter(key);
-    this.decrypter = new DirectDecrypter(key);
+    if(key.length != 16){
+      throw new IllegalArgumentException("swlodr only supports 128 bit encryption keys.");
+    }
+
+    try {
+      this.encrypter = new DirectEncrypter(key);
+      this.decrypter = new DirectDecrypter(key);
+    } catch (KeyLengthException e) {
+      throw new IllegalArgumentException("swlodr only supports 128 bit encryption keys.", e);
+    }
     this.sessionLength = sessionLength;
   }
 
