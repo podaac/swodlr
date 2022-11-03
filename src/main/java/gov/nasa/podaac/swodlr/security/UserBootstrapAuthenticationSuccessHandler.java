@@ -11,6 +11,7 @@ import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Component
 public class UserBootstrapAuthenticationSuccessHandler
@@ -22,28 +23,27 @@ public class UserBootstrapAuthenticationSuccessHandler
   @Override
   public Mono<Void> onAuthenticationSuccess(WebFilterExchange webFilterExchange,
       Authentication authentication) {
-    return Mono.defer(() -> {
-      return webFilterExchange.getExchange().getSession()
-          .doOnNext((session) -> {
-            var principle = authentication.getPrincipal();
-            if (principle instanceof DefaultOAuth2User oauth2User) {
-              // the name attribute is the EDL username which acts as a uid
-              String username = oauth2User.getName();
-              Optional<User> result = userRepository.findByUsername(username);
+    return Mono.defer(() -> webFilterExchange.getExchange().getSession()
+            .publishOn(Schedulers.boundedElastic())
+        .doOnNext((session) -> {
+          var principle = authentication.getPrincipal();
+          if (principle instanceof DefaultOAuth2User oauth2User) {
+            // the name attribute is the EDL username which acts as a uid
+            String username = oauth2User.getName();
+            Optional<User> result = userRepository.findByUsername(username);
 
-              if (result.isPresent()) {
-                UserReference userReference = new UserReference(result.get());
-                session.getAttributes().put("user", userReference);
-              } else {
-                User user = new User(username);
-                userRepository.save(user);
+            if (result.isPresent()) {
+              UserReference userReference = new UserReference(result.get());
+              session.getAttributes().put("user", userReference);
+            } else {
+              User user = new User(username);
+              userRepository.save(user);
 
-                UserReference userReference = new UserReference(user);
-                session.getAttributes().put("user", userReference);
-              }
+              UserReference userReference = new UserReference(user);
+              session.getAttributes().put("user", userReference);
             }
-          })
-          .then();
-    });
+          }
+        })
+        .then());
   }
 }
