@@ -41,7 +41,7 @@ public class JweSession implements WebSession, Serializable {
   private static SwodlrSecurityProperties securityProperties;
 
   private UUID id;
-  private ServerHttpResponse response;
+  private transient ServerHttpResponse response;
   private final Instant creationTime;
   private final Instant expiration;
   private final Map<String, Object> attributes;
@@ -226,16 +226,9 @@ public class JweSession implements WebSession, Serializable {
     try {
       objectStream = new ObjectOutputStream(deflaterStream);
       
-      // Store response object temporarily so it's not serialized
-      ServerHttpResponse response = this.response;
-      this.response = null;
-      
       objectStream.writeObject(this);
       objectStream.flush();
       objectStream.close();
-
-      // Restore response object
-      this.response = response;
     } catch (IOException ex) {
       logger.error("Serialization failed", ex);
       return null;
