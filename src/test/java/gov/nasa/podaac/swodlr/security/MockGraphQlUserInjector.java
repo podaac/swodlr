@@ -23,10 +23,12 @@ public class MockGraphQlUserInjector implements WebGraphQlInterceptor {
 
   @Override
   public Mono<WebGraphQlResponse> intercept(WebGraphQlRequest request, Chain chain) {
-    request.configureExecutionInput((executionInput, builder) -> {
-      builder.graphQLContext(Collections.singletonMap("user", mockUser));
-      return builder.build();
+    return Mono.defer(() -> {
+      request.configureExecutionInput((executionInput, builder) -> {
+        builder.graphQLContext(Collections.singletonMap("user", mockUser));
+        return builder.build();
+      });
+      return chain.next(request);
     });
-    return chain.next(request);
   }
 }
