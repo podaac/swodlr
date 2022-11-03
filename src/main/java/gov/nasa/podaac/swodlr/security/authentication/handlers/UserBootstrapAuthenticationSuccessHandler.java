@@ -1,4 +1,4 @@
-package gov.nasa.podaac.swodlr.security;
+package gov.nasa.podaac.swodlr.security.authentication.handlers;
 
 import gov.nasa.podaac.swodlr.user.User;
 import gov.nasa.podaac.swodlr.user.UserReference;
