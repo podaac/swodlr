@@ -21,13 +21,14 @@ public class SwodlrSecurityProperties {
   /**
    * Configuration properties for swodlr sessions.
    *
-   * @param sessionEncryptionKey Encryption key to use for web sessions. Must be 128 bits (16 bytes).
+   * @param sessionEncryptionKey Encryption key to use for web sessions.
+   *                             Must be 128 bits (16 bytes).
    * @param sessionLength How long sessions are valid
    */
   public SwodlrSecurityProperties(String sessionEncryptionKey, Duration sessionLength) {
     byte[] key = Hex.decode(sessionEncryptionKey);
 
-    if(key.length != 16){
+    if (key.length != 16) {
       throw new IllegalArgumentException("swlodr only supports 128 bit encryption keys.");
     }
 
