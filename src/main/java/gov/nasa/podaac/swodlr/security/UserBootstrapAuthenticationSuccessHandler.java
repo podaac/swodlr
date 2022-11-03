@@ -33,7 +33,7 @@ public class UserBootstrapAuthenticationSuccessHandler
 
               if (result.isPresent()) {
                 UserReference userReference = new UserReference(result.get());
-                session.getAttributes().put(username, userReference);
+                session.getAttributes().put("user", userReference);
               } else {
                 User user = new User(username);
                 userRepository.save(user);
