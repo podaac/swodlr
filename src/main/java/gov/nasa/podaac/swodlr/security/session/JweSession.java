@@ -6,6 +6,7 @@ import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWEHeader;
 import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jose.Payload;
+import gov.nasa.podaac.swodlr.Utils;
 import gov.nasa.podaac.swodlr.security.SwodlrSecurityProperties;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,12 +36,12 @@ import reactor.core.publisher.Mono;
 
 public class JweSession implements WebSession, Serializable {
   public static final String SESSION_COOKIE_NAME = "session";
-
   private static final Logger logger = LoggerFactory.getLogger(JweSession.class);
+
   private static SwodlrSecurityProperties securityProperties;
 
   private UUID id;
-  private ServerHttpResponse response;
+  private transient ServerHttpResponse response;
   private final Instant creationTime;
   private final Instant expiration;
   private final Map<String, Object> attributes;
@@ -49,7 +50,7 @@ public class JweSession implements WebSession, Serializable {
     this.id = UUID.randomUUID();
     this.response = response;
     this.creationTime = Instant.now();
-    this.expiration = this.creationTime.plus(securityProperties.sessionLength());
+    this.expiration = this.creationTime.plus(getSecurityProperties().sessionLength());
     this.attributes = new ConcurrentHashMap<>();
   }
 
@@ -109,11 +110,12 @@ public class JweSession implements WebSession, Serializable {
     });
   }
 
-  public static void setSecurityProperties(SwodlrSecurityProperties securityProperties) {
-    if (JweSession.securityProperties == null) {
-      // Only allow setting once
-      JweSession.securityProperties = securityProperties;
+  private static SwodlrSecurityProperties getSecurityProperties() {
+    if (securityProperties == null) {
+      securityProperties = Utils.applicationContext()
+          .getBean(SwodlrSecurityProperties.class);
     }
+    return securityProperties;
   }
 
   public static Mono<JweSession> load(ServerWebExchange exchange) {
@@ -131,7 +133,7 @@ public class JweSession implements WebSession, Serializable {
       JWEObject jweObject;
       try {
         jweObject = JWEObject.parse(sessionCookie.getValue());
-        jweObject.decrypt(securityProperties.decrypter());
+        jweObject.decrypt(getSecurityProperties().decrypter());
       } catch (ParseException | JOSEException ex) {
         return Mono.error(ex);
       }
@@ -209,7 +211,7 @@ public class JweSession implements WebSession, Serializable {
     Payload payload = new Payload(this.serialize());
     JWEObject jwe = new JWEObject(header, payload);
 
-    jwe.encrypt(securityProperties.encrypter());
+    jwe.encrypt(getSecurityProperties().encrypter());
 
     return jwe;
   }
@@ -224,16 +226,9 @@ public class JweSession implements WebSession, Serializable {
     try {
       objectStream = new ObjectOutputStream(deflaterStream);
       
-      // Store response object temporarily so it's not serialized
-      ServerHttpResponse response = this.response;
-      this.response = null;
-      
       objectStream.writeObject(this);
       objectStream.flush();
       objectStream.close();
-
-      // Restore response object
-      this.response = response;
     } catch (IOException ex) {
       logger.error("Serialization failed", ex);
       return null;

@@ -1,6 +1,7 @@
 package gov.nasa.podaac.swodlr.security;
 
 import gov.nasa.podaac.swodlr.user.User;
+import gov.nasa.podaac.swodlr.user.UserReference;
 import gov.nasa.podaac.swodlr.user.UserRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,14 @@ public class UserBootstrapAuthenticationSuccessHandler
               Optional<User> result = userRepository.findByUsername(username);
 
               if (result.isPresent()) {
-                session.getAttributes().put(username, result.get());
+                UserReference userReference = new UserReference(result.get());
+                session.getAttributes().put("user", userReference);
               } else {
                 User user = new User(username);
                 userRepository.save(user);
-                session.getAttributes().put("user", user);
+
+                UserReference userReference = new UserReference(user);
+                session.getAttributes().put("user", userReference);
               }
             }
           })
