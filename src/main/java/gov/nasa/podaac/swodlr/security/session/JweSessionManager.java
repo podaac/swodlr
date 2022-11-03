@@ -10,14 +10,16 @@ import reactor.core.publisher.Mono;
 public class JweSessionManager implements WebSessionManager {
   @Override
   public Mono<WebSession> getSession(ServerWebExchange exchange) {
-    return JweSession.load(exchange)
-        .switchIfEmpty(createSession(exchange))
-        .doOnNext(session -> {
-          session.setResponse(exchange.getResponse());
-          exchange.getResponse().beforeCommit(() -> session.save());
-        })
-        .cast(WebSession.class)
-        .cache();
+    return Mono.defer(() -> {
+      return JweSession.load(exchange)
+          .switchIfEmpty(createSession(exchange))
+          .doOnNext(session -> {
+            session.setResponse(exchange.getResponse());
+            exchange.getResponse().beforeCommit(() -> session.save());
+          })
+          .cast(WebSession.class)
+          .cache();
+    });
   }
 
   private Mono<JweSession> createSession(ServerWebExchange exchange) {
