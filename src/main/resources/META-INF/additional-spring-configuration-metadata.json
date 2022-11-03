@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "swodlr.security.sessionLength",
+    "description": "length of sessions.",
+    "type": "java.time.Duration",
+    "defaultValue": "24h"
+  },
+  {
+    "name": "swodlr.security.session-encryption-key",
+    "description": "encryption key to use for web sessions. Must be 128 bits (16 bytes)."
+  }
+]}
