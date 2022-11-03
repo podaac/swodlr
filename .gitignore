@@ -24,6 +24,8 @@ hs_err_pid*
 
 # Ignore Gradle project-specific cache directory
 .gradle/
+gradlew
+gradlew.bat
 
 # Ignore build output directories
 build/
@@ -45,3 +47,9 @@ bin/
 
 # Deployment config
 /application.properties
+
+# Local database data
+/database/psql-data
+
+# IntelliJ Idea
+.idea

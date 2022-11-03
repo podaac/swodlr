@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/swodlr
+  graphql:
+    graphiql:
+      enabled: true
+      path: /graphiql
