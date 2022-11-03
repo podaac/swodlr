@@ -4,9 +4,10 @@ import gov.nasa.podaac.swodlr.Utils;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.UUID;
-import org.springframework.context.ApplicationContext;
 
 public class UserReference implements Serializable {
+  private static UserRepository userRepository;
+
   private final UUID id;
 
   public UserReference(User user) {
@@ -25,8 +26,16 @@ public class UserReference implements Serializable {
    * @return a user object wrapped in an optional
    */
   public Optional<User> fetch() {
-    ApplicationContext context = Utils.applicationContext();
-    UserRepository userRepository = context.getBean(UserRepository.class);
-    return userRepository.findById(id);
+    return getUserRepository().findById(id);
+  }
+
+  private UserRepository getUserRepository() {
+    if (userRepository == null) {
+      userRepository = Utils
+          .applicationContext()
+          .getBean(UserRepository.class);
+    }
+
+    return userRepository;
   }
 }
