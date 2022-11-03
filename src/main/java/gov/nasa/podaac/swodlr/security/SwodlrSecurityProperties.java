@@ -13,7 +13,6 @@ import org.springframework.security.crypto.codec.Hex;
 
 @ConfigurationProperties("swodlr.security")
 @ConstructorBinding
-@Qualifier("securityConfig")
 public class SwodlrSecurityProperties {
   private final JWEEncrypter encrypter;
   private final JWEDecrypter decrypter;
