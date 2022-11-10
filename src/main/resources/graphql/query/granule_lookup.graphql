@@ -1,0 +1,6 @@
+query ($clientId: [String]) {
+  granules(conceptId: $clientId) {
+    count
+    cursor
+  }
+}
