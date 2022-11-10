@@ -10,6 +10,8 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.ContextValue;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -21,8 +23,14 @@ public class L2RasterProductController {
   L2RasterProductRepository l2RasterProductRepository;
 
   @MutationMapping
-  public L2RasterProduct createL2RasterProduct(@ContextValue User user, @Argument UUID definition,
-      @Argument int cycle, @Argument int scene, @Argument int pass) {
+  public L2RasterProduct createL2RasterProduct(
+      @AuthenticationPrincipal DefaultOAuth2User principal,
+      @ContextValue User user,
+      @Argument UUID definition,
+      @Argument int cycle,
+      @Argument int scene,
+      @Argument int pass
+  ) {
     return l2RasterProductService.createL2RasterProduct(user, definition, cycle, scene, pass);
   }
 
