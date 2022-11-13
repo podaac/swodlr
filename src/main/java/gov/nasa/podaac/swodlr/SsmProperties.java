@@ -19,16 +19,15 @@ public class SsmProperties extends PropertySource<Object> {
   public SsmProperties() {
     super(SOURCE_NAME);
 
-    SsmClient ssmClient = SsmClient.builder()
-        .credentialsProvider(null)
-        .build();
+    SsmClient ssmClient = SsmClient.builder().build();
 
     GetParametersByPathResponse res = ssmClient.getParametersByPath((request) -> {
       request.path(PATH);
     });
 
     for (Parameter param : res.parameters()) {
-      properties.put(param.name(), param.value());
+      String name = param.name().substring(PATH.length() + 1);
+      properties.put(name, param.value());
     }
   }
 
