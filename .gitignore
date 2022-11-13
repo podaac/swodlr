@@ -47,6 +47,7 @@ bin/
 
 # Deployment config
 /application.properties
+.envrc
 
 # Local database data
 /database/psql-data
