@@ -1,49 +1,54 @@
 terraform {
-    required_version = ">=1.2.7"
+  required_version = ">=1.2.7"
 
-    backend "s3" {
-        key = "services/swodlr/terraform.tfstate"
-    }
+  backend "s3" {
+    key = "services/swodlr/terraform.tfstate"
+  }
 
-    required_providers {
-        aws = {
-            source = "hashicorp/aws"
-            version = ">=4.27.0"
-        }
-        random = {
-            source = "hashicorp/random"
-            version = ">=3.3.2"
-        }
-        cloudinit = {
-            source = "hashicorp/cloudinit"
-            version = ">=2.2.0"
-        }
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = ">=4.27.0"
     }
+    random = {
+      source = "hashicorp/random"
+      version = ">=3.3.2"
+    }
+    cloudinit = {
+      source = "hashicorp/cloudinit"
+      version = ">=2.2.0"
+    }
+  }
 }
 
 provider "aws" {
-    region = var.region
+  region = var.region
 
-    default_tags {
-      tags = local.default_tags
-    }
+  default_tags {
+    tags = local.default_tags
+  }
 
-    ignore_tags {
-        key_prefixes = ["gsfc-ngap"]
-    }
+  ignore_tags {
+    key_prefixes = ["gsfc-ngap"]
+  }
 }
 
 data "aws_caller_identity" "current" {}
 
 locals {
-    name        = var.app_name
-    environment = var.stage
+  name    = var.app_name
+  environment = var.stage
 
-    resource_prefix = "service-${local.name}-${local.environment}"
+  resource_prefix = "service-${local.name}-${local.environment}"
+  
+  service_path = "/service/${local.name}"
+  app_path = "${local.service_path}/app"
 
-    default_tags = length(var.default_tags) == 0 ? {
-        team = "TVA"
-        application = local.resource_prefix
-        Environment = local.environment
-    } : var.default_tags
+  account_id = data.aws_caller_identity.current.account_id
+
+  default_tags = length(var.default_tags) == 0 ? {
+    team = "TVA"
+    application = local.resource_prefix
+    Environment = local.environment
+  } : var.default_tags
 }

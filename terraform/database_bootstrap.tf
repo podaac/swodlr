@@ -24,11 +24,11 @@ data "cloudinit_config" "db_bootstrap" {
                 db_name = var.db_name
                 endpoint = aws_db_instance.database.endpoint
 
-                admin_username = aws_ssm_parameter.admin_username.value
-                admin_password = aws_ssm_parameter.admin_password.value
+                admin_username = aws_ssm_parameter.db_admin_username.value
+                admin_password = aws_ssm_parameter.db_admin_password.value
 
-                app_username = aws_ssm_parameter.app_username.value
-                app_password = aws_ssm_parameter.app_password.value
+                app_username = aws_ssm_parameter.db_app_username.value
+                app_password = aws_ssm_parameter.db_app_password.value
             }
         )
     }
