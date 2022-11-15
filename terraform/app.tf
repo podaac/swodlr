@@ -108,6 +108,9 @@ resource "aws_security_group" "app" {
     from_port = 8080
     to_port   = 8080
     protocol  = "tcp"
+    cidr_blocks = [data.aws_vpc.default.cidr_block]
+    ipv6_cidr_blocks = [data.aws_vpc.default.ipv6_cidr_block]
+    self = true
   }
 
   egress {
