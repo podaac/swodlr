@@ -125,6 +125,9 @@ resource "aws_iam_role" "app_task" {
   path = "${local.app_path}/"
 
   permissions_boundary = "arn:aws:iam::${local.account_id}:policy/NGAPShRoleBoundary"
+  managed_policy_arns = [
+    "arn:aws:iam::${local.account_id}:policy/NGAPProtAppInstanceMinimalPolicy"
+  ]
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
