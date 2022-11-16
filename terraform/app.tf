@@ -189,7 +189,7 @@ resource "aws_iam_role" "app_task" {
             "ssm:GetParametersByPath"
           ]
           Effect = "Allow"
-          Resource = "arn:aws:ssm:${var.region}:${local.account_id}:parameter${local.app_path}/*"
+          Resource = "arn:aws:ssm:${var.region}:${local.account_id}:parameter${local.service_path}/*"
         }
       ]
     })
