@@ -66,28 +66,28 @@ resource "aws_db_instance" "database" {
 
 /* -- SSM Parameter Store -- */
 resource "aws_ssm_parameter" "db_admin_username" {
-  name = "${local.resource_prefix}-admin"
+  name = "${local.service_path}/db-admin-username"
   type = "String"
   value = aws_db_instance.database.username
   overwrite = true
 }
 
 resource "aws_ssm_parameter" "db_admin_password" {
-  name = "${local.resource_prefix}-admin-pass"
+  name = "${local.service_path}/db-admin-password"
   type = "SecureString"
   value = aws_db_instance.database.password
   overwrite = true
 }
 
 resource "aws_ssm_parameter" "db_app_username" {
-  name = "${local.resource_prefix}-app"
+  name = "${local.service_path}/db-app-username"
   type = "String"
   value = random_pet.app_username.id
   overwrite = true
 }
 
 resource "aws_ssm_parameter" "db_app_password" {
-  name = "${local.resource_prefix}-app-pass"
+  name = "${local.service_path}/db-app-password"
   type = "SecureString"
   value = random_password.app_password.result
   overwrite = true
