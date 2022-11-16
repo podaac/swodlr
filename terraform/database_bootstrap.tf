@@ -78,7 +78,7 @@ resource "aws_instance" "db_bootstrap" {
 
 /* -- Store bootstrap metadata -- */
 resource "aws_ssm_parameter" "bootstrap_time" {
-  name = "${local.service_path}/db-bootstrap-time"
+  name = local.db_bootstrap_time_ssm_id
   description = "Timestamp of when the database bootstrap instance was launched"
   depends_on = [aws_instance.db_bootstrap]
   type = "String"
