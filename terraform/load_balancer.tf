@@ -23,6 +23,12 @@ resource "aws_lb_target_group" "app" {
   protocol = "HTTP"
   target_type = "ip"
   vpc_id = data.aws_vpc.default.id
+
+  health_check {
+    enabled = true
+    matcher = "200,302"
+    path = "/"
+  }
 }
 
 /* -- Security Group -- */

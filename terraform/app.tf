@@ -41,7 +41,10 @@ resource "aws_ecs_service" "app" {
 
   network_configuration {
     subnets = data.aws_subnets.private.ids
-    security_groups = [aws_security_group.app.id]
+    security_groups = [
+      aws_security_group.app.id,
+      aws_security_group.database.id
+    ]
   }
 }
 
