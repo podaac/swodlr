@@ -23,10 +23,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws-parameter-store-config:2.4.2'
     implementation 'org.postgresql:postgresql:42.5.0'
     implementation 'com.zaxxer:HikariCP:5.0.1'
     implementation 'io.netty:netty-all:4.1.82.Final'
-    implementation 'software.amazon.awssdk:ssm:2.18.15'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
