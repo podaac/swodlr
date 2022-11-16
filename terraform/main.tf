@@ -35,8 +35,13 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
+data "local_file" "version" {
+  filename = abspath("${path.root}/../build.gradle")
+}
+
 locals {
   name    = var.app_name
+  version = regex("version = '(\\S*)'", data.local_file.version.content)[0]
   environment = var.stage
 
   resource_prefix = "service-${local.name}-${local.environment}"
@@ -49,6 +54,7 @@ locals {
   default_tags = length(var.default_tags) == 0 ? {
     team = "TVA"
     application = local.resource_prefix
+    version = local.version
     Environment = local.environment
   } : var.default_tags
 }
