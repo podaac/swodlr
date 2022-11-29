@@ -7,9 +7,10 @@ set -exo pipefail
 source /root/.env
 
 psql postgresql://$ENDPOINT/postgres \
-    -U $ADMIN_USERNAME \
-    -v ON_ERROR_STOP=1 \
-    -f /root/init.sql  \
-    -f /root/schema.sql
+    -U $ADMIN_USERNAME  \
+    -v ON_ERROR_STOP=1  \
+    -f /root/init.sql   \
+    -f /root/schema.sql \
+    -f /root/app_user.sql
 
 shutdown
