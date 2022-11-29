@@ -30,15 +30,22 @@ write_files:
     owner: root:root
     content: |
       CREATE DATABASE ${db_name} ENCODING UTF8;
-      CREATE USER ${app_username} WITH LOGIN PASSWORD '${app_password}';
       \connect ${db_name}
-      GRANT CONNECT ON DATABASE ${db_name} TO ${app_username};
-      GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ${app_username};
   - path: /root/schema.sql
     encoding: b64
     permissions: '0600'
     owner: root:root
     content: ${schema_sql}
+  - path: /root/app_user.sql
+    permissions: '0600'
+    owner: root:root
+    content: |
+      CREATE USER ${app_username} WITH LOGIN PASSWORD '${app_password}';
+      GRANT CONNECT ON DATABASE ${db_name} TO ${app_username};
+      GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ${app_username};
+      GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to ${app_username};
+      GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public to ${app_username};
+      GRANT ALL PRIVILEGES ON ALL ROUTINES IN SCHEMA public to ${app_username};
   - path: /root/.env
     permissions: '0600'
     owner: root:root
