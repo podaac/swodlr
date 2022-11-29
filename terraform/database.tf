@@ -58,7 +58,7 @@ resource "aws_db_instance" "database" {
   db_subnet_group_name = aws_db_subnet_group.default.id
 
   engine = "postgres"
-  engine_version = "14.2"
+  engine_version = "14.3"
 
   username = random_pet.admin_username.id
   password = random_password.admin_password.result
