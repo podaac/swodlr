@@ -10,16 +10,15 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 public class CmrProperties {
   public final String endpoint;
   public final String pixcConceptId;
-  public final String pixcvecConceptId;
-
+  public final String pixcVecConceptId;
 
   public CmrProperties(
       @NotNull String endpoint,
       @NotNull String pixcConceptId,
-      @NotNull String pixcvecConceptId
+      @NotNull String pixcVecConceptId
   ) {
     this.endpoint = endpoint;
     this.pixcConceptId = pixcConceptId;
-    this.pixcvecConceptId = pixcvecConceptId;
+    this.pixcVecConceptId = pixcVecConceptId;
   }
 }

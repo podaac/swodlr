@@ -1,6 +1,16 @@
-query ($clientId: [String]) {
-  granules(conceptId: $clientId) {
+query ($pixcParams: GranulesInput, $pixcVecParams: GranulesInput) {
+  pixc: granules(params: $pixcParams) {
     count
-    cursor
+    items {
+      links
+      granuleSize
+    }
+  }
+  pixcVec: granules(params: $pixcVecParams) {
+    count
+    items {
+      links
+      granuleSize
+    }
   }
 }
