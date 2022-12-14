@@ -14,14 +14,15 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.graphql.client.ClientGraphQlResponse;
 import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.graphql.client.WebGraphQlClient;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -39,21 +40,22 @@ public class SwotCmrLookupService {
 
   private static final char[] SWATH_DIRECTIONS = new char[]{'L', 'R'};
 
-  private Logger logger = LoggerFactory.getLogger(getClass());
-
-  private final WebGraphQlClient graphQlClient;
+  private final ReactiveOAuth2AuthorizedClientManager authorizedClientManager;
+  private final ReactiveOAuth2AuthorizedClientService authorizedClientService;
   private final CmrProperties cmrProperties;
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
   public SwotCmrLookupService(
       ReactiveOAuth2AuthorizedClientManager authorizedClientManager,
+      ReactiveOAuth2AuthorizedClientService authorizedClientService,
       CmrProperties cmrProperties
   ) {
+    this.authorizedClientManager = authorizedClientManager;
+    this.authorizedClientService = authorizedClientService;
     this.cmrProperties = cmrProperties;
-    this.graphQlClient = buildGraphQlClient(authorizedClientManager);
   }
 
   public Mono<Map<String, List<String>>> findGranules(
-      @NotNull OAuth2AuthorizedClient authorizedClient,
       @PositiveOrZero int cycle,
       @PositiveOrZero int pass,
       @PositiveOrZero int scene
@@ -63,16 +65,18 @@ public class SwotCmrLookupService {
     Map<String, Object> reqBody = buildReqBody(cycle, pass, scene);
     logger.debug("Request body: " + reqBody.toString());
 
-    return graphQlClient
+    return buildGraphQlClient()
         .document("query/granule_lookup")
-        .attributes(oauth2AuthorizedClient(authorizedClient))
         .variables(reqBody)
         .execute()
         .map((response) -> parseResponse(response));
   }
 
   private Map<String, List<String>> parseResponse(ClientGraphQlResponse response) {
-    logger.debug("Response received: %s", response.getData().toString());
+    Object data = response.getData();
+    if (data != null) {
+      logger.debug("Response received: %s", data.toString());
+    }
 
     @SuppressWarnings("unchecked")
     Map<String, Object> pixcResults = (Map<String, Object>) response.field("pixc");
@@ -199,15 +203,19 @@ public class SwotCmrLookupService {
 
     return Optional.empty();
   }
-  
-  private WebGraphQlClient buildGraphQlClient(ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
+
+  private WebGraphQlClient buildGraphQlClient() {
     ServerOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
 			new ServerOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
+
+    EDLAuthorizedClientFilterFunction edlAUthorizedClient =
+      new EDLAuthorizedClientFilterFunction(authorizedClientService);
 
     oauth2Client.setDefaultClientRegistrationId("edl");
     
     WebClient webClient = WebClient.builder()
         .baseUrl(cmrProperties.endpoint)
+        .filter(edlAUthorizedClient)
         .filter(oauth2Client)
         .defaultHeaders((headers) -> {
           headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
