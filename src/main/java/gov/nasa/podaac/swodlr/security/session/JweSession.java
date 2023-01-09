@@ -1,7 +1,6 @@
 package gov.nasa.podaac.swodlr.security.session;
 
 import gov.nasa.podaac.swodlr.security.AbstractJweCookieStore;
-import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
