@@ -1,11 +1,8 @@
 package gov.nasa.podaac.swodlr.security.authentication.client;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-
 import gov.nasa.podaac.swodlr.security.AbstractJweCookieStore;
 import reactor.core.publisher.Mono;
 
