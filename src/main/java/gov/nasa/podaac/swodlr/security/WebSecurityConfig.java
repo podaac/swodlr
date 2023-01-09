@@ -1,5 +1,6 @@
 package gov.nasa.podaac.swodlr.security;
 
+import gov.nasa.podaac.swodlr.security.authentication.client.JweCookieReactiveOAuth2AuthorizedClientService;
 import gov.nasa.podaac.swodlr.security.authentication.handlers.SuccessMessageAuthenticationSuccessHandler;
 import gov.nasa.podaac.swodlr.security.authentication.handlers.UserBootstrapAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.client.AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager;
-import org.springframework.security.oauth2.client.InMemoryReactiveOAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
@@ -28,7 +28,7 @@ public class WebSecurityConfig {
   private SuccessMessageAuthenticationSuccessHandler successHandler;
 
   public WebSecurityConfig(ReactiveClientRegistrationRepository clientRegistrationRepository) {
-    authorizedClientService = new InMemoryReactiveOAuth2AuthorizedClientService(clientRegistrationRepository);
+    authorizedClientService = new JweCookieReactiveOAuth2AuthorizedClientService();
     authorizedClientManager = new AuthorizedClientServiceReactiveOAuth2AuthorizedClientManager(
       clientRegistrationRepository, authorizedClientService
     );
