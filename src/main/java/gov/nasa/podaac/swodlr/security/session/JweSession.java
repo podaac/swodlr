@@ -1,29 +1,12 @@
 package gov.nasa.podaac.swodlr.security.session;
 
-import com.nimbusds.jose.EncryptionMethod;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWEAlgorithm;
-import com.nimbusds.jose.JWEHeader;
-import com.nimbusds.jose.JWEObject;
-import com.nimbusds.jose.Payload;
-import gov.nasa.podaac.swodlr.Utils;
-import gov.nasa.podaac.swodlr.security.SwodlrSecurityProperties;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import gov.nasa.podaac.swodlr.security.AbstractJweCookieStore;
 import java.io.Serializable;
-import java.text.ParseException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.zip.Deflater;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.InflaterInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpCookie;
@@ -34,23 +17,19 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
-public class JweSession implements WebSession, Serializable {
+public class JweSession extends AbstractJweCookieStore implements WebSession {
   public static final String SESSION_COOKIE_NAME = "session";
   private static final Logger logger = LoggerFactory.getLogger(JweSession.class);
 
-  private static SwodlrSecurityProperties securityProperties;
-
   private UUID id;
   private transient ServerHttpResponse response;
-  private final Instant creationTime;
-  private final Instant expiration;
   private final Map<String, Object> attributes;
 
   JweSession(ServerHttpResponse response) {
+    super(SESSION_COOKIE_NAME);
+
     this.id = UUID.randomUUID();
     this.response = response;
-    this.creationTime = Instant.now();
-    this.expiration = this.creationTime.plus(getSecurityProperties().sessionLength());
     this.attributes = new ConcurrentHashMap<>();
   }
 
@@ -99,7 +78,8 @@ public class JweSession implements WebSession, Serializable {
       ResponseCookie cookie;
       try {
         cookie = generateCookie();
-      } catch (JOSEException ex) {
+      } catch (Exception ex) {
+        logger.error("Failed to generate session cookie", ex);
         return Mono.error(ex);
       }
 
@@ -110,14 +90,6 @@ public class JweSession implements WebSession, Serializable {
     });
   }
 
-  private static SwodlrSecurityProperties getSecurityProperties() {
-    if (securityProperties == null) {
-      securityProperties = Utils.applicationContext()
-          .getBean(SwodlrSecurityProperties.class);
-    }
-    return securityProperties;
-  }
-
   public static Mono<JweSession> load(ServerWebExchange exchange) {
     ServerHttpRequest request = exchange.getRequest();
     HttpCookie cookie = request.getCookies().getFirst(SESSION_COOKIE_NAME);
@@ -125,36 +97,7 @@ public class JweSession implements WebSession, Serializable {
       return Mono.empty();
     }
 
-    return load(cookie);
-  }
-
-  public static Mono<JweSession> load(HttpCookie sessionCookie) {
-    return Mono.defer(() -> {
-      JWEObject jweObject;
-      try {
-        jweObject = JWEObject.parse(sessionCookie.getValue());
-        jweObject.decrypt(getSecurityProperties().decrypter());
-      } catch (ParseException | JOSEException ex) {
-        return Mono.error(ex);
-      }
-        
-      byte[] data = jweObject.getPayload().toBytes();
-      if (data == null) {
-        return Mono.empty();
-      }
-
-      Optional<JweSession> result = JweSession.deserialize(data);
-      if (!result.isPresent()) {
-        return Mono.empty();
-      }
-        
-      JweSession session = result.get();
-      if (!session.isExpired()) {
-        return Mono.just(session);
-      }
-      
-      return Mono.empty();
-    });
+    return Mono.justOrEmpty(loadCookie(JweSession.class, cookie));
   }
 
   @Override
@@ -192,77 +135,5 @@ public class JweSession implements WebSession, Serializable {
 
   public void setResponse(ServerHttpResponse response) {
     this.response = response;
-  }
-
-  private ResponseCookie generateCookie() throws JOSEException {
-    JWEObject jwe = generateJwe();
-    ResponseCookie cookie = ResponseCookie.from(SESSION_COOKIE_NAME, jwe.serialize())
-        .maxAge(Duration.between(Instant.now(), expiration))
-        .path("/")
-        //.secure(true) - TODO: Set this based on env
-        //.httpOnly(true) - TODO: Set this based on env
-        .build();
-
-    return cookie;
-  }
-  
-  private JWEObject generateJwe() throws JOSEException {
-    JWEHeader header = generateHeader(this.creationTime);
-    Payload payload = new Payload(this.serialize());
-    JWEObject jwe = new JWEObject(header, payload);
-
-    jwe.encrypt(getSecurityProperties().encrypter());
-
-    return jwe;
-  }
-
-  private byte[] serialize() {
-    Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
-
-    ByteArrayOutputStream arrayStream = new ByteArrayOutputStream();
-    DeflaterOutputStream deflaterStream = new DeflaterOutputStream(arrayStream, deflater);
-    ObjectOutputStream objectStream;
-
-    try {
-      objectStream = new ObjectOutputStream(deflaterStream);
-      
-      objectStream.writeObject(this);
-      objectStream.flush();
-      objectStream.close();
-    } catch (IOException ex) {
-      logger.error("Serialization failed", ex);
-      return null;
-    }
-
-    return arrayStream.toByteArray();
-  }
-
-  private static Optional<JweSession> deserialize(byte[] buffer) {
-    ByteArrayInputStream arrayStream = new ByteArrayInputStream(buffer);
-    InflaterInputStream inflaterStream = new InflaterInputStream(arrayStream);
-    ObjectInputStream objectStream;
-
-    try {
-      objectStream = new ObjectInputStream(inflaterStream);
-      Object data = objectStream.readObject();
-      if (data instanceof JweSession) {
-        objectStream.close();
-        return Optional.of((JweSession) data);
-      }
-    } catch (IOException | ClassNotFoundException ex) {
-      logger.error("Deserialization failed", ex);
-    }
-
-    return Optional.empty();
-  }
-
-  private static JWEHeader generateHeader(Instant expiry) {
-    JWEHeader.Builder builder
-        = new JWEHeader.Builder(JWEAlgorithm.DIR, EncryptionMethod.A128GCM);
-
-    return builder
-        .contentType("application/json")
-        .customParam("exp", expiry.toString())
-        .build();
   }
 }
