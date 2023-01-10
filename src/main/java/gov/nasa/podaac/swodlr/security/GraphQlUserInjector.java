@@ -19,7 +19,7 @@ public class GraphQlUserInjector implements WebGraphQlInterceptor {
           UserReference userReference = session.getAttribute("user");
           if (userReference != null) {
             request.configureExecutionInput((executionInput, builder) -> {
-              builder.graphQLContext(Collections.singletonMap("user", userReference));
+              builder.graphQLContext(Collections.singletonMap("userRef", userReference));
               return builder.build();
             });
           }
