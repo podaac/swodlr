@@ -2,6 +2,7 @@ package gov.nasa.podaac.swodlr.security;
 
 import gov.nasa.podaac.swodlr.user.UserReference;
 import java.util.Collections;
+import org.springframework.context.annotation.Profile;
 import org.springframework.graphql.server.WebGraphQlInterceptor;
 import org.springframework.graphql.server.WebGraphQlRequest;
 import org.springframework.graphql.server.WebGraphQlResponse;
@@ -10,6 +11,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
+@Profile("!test")
 public class GraphQlUserInjector implements WebGraphQlInterceptor {
   @Override
   public Mono<WebGraphQlResponse> intercept(WebGraphQlRequest request, Chain chain) {
