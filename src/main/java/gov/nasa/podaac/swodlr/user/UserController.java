@@ -11,7 +11,7 @@ public class UserController {
   UserRepository userRepository;
 
   @QueryMapping
-  public User currentUser(@ContextValue User user) {
-    return user;
+  public User currentUser(@ContextValue UserReference userRef) {
+    return userRef.fetch();
   }
 }
