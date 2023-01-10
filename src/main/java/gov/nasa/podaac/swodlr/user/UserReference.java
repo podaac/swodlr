@@ -1,6 +1,7 @@
 package gov.nasa.podaac.swodlr.user;
 
 import gov.nasa.podaac.swodlr.Utils;
+import gov.nasa.podaac.swodlr.exception.SwodlrException;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,12 +22,16 @@ public class UserReference implements Serializable {
   /*
    * Fetch the User object that this object references. The user may have
    * been deleted from the database since the last lookup so the presence
-   * of the user is not guaranteed
-   * 
-   * @return a user object wrapped in an optional
+   * of the user is not guaranteed. If the user is not found, a SwodlrException
+   * is thrown
    */
-  public Optional<User> fetch() {
-    return getUserRepository().findById(id);
+  public User fetch() {
+    Optional<User> result = getUserRepository().findById(id);
+    if (result.isEmpty()) {
+      throw new SwodlrException("User cannot be found. Try clearing your cookies and try again.");
+    }
+
+    return result.get();
   }
 
   private UserRepository getUserRepository() {

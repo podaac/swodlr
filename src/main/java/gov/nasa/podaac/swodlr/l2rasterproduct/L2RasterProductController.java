@@ -3,6 +3,8 @@ package gov.nasa.podaac.swodlr.l2rasterproduct;
 import gov.nasa.podaac.swodlr.Utils;
 import gov.nasa.podaac.swodlr.status.Status;
 import gov.nasa.podaac.swodlr.user.User;
+import gov.nasa.podaac.swodlr.user.UserReference;
+import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,6 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.ContextValue;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -23,15 +23,17 @@ public class L2RasterProductController {
   L2RasterProductRepository l2RasterProductRepository;
 
   @MutationMapping
-  public L2RasterProduct createL2RasterProduct(
-      @AuthenticationPrincipal DefaultOAuth2User principal,
-      @ContextValue User user,
+  public Mono<L2RasterProduct> createL2RasterProduct(
+      @ContextValue UserReference userRef,
       @Argument UUID definition,
       @Argument int cycle,
       @Argument int scene,
       @Argument int pass
   ) {
-    return l2RasterProductService.createL2RasterProduct(user, definition, cycle, scene, pass);
+    return Mono.defer(() -> {
+      User user = userRef.fetch();
+      return l2RasterProductService.createL2RasterProduct(user, definition, cycle, scene, pass);
+    });
   }
 
   @SchemaMapping(typeName = "Status", field = "product")
