@@ -7,8 +7,6 @@ import com.nimbusds.jose.JWEHeader;
 import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jose.Payload;
 import gov.nasa.podaac.swodlr.Utils;
-import reactor.core.publisher.Mono;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,11 +26,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
 
 public abstract class AbstractJweCookieStore implements Serializable {
   private static final String COMPRESSION_METHOD = CompressorStreamFactory.LZMA;
   private static final Logger logger = LoggerFactory.getLogger(AbstractJweCookieStore.class);
-  private static final CompressorStreamFactory COMPRESSOR_STREAM_FACTORY = new CompressorStreamFactory();
+  private static final CompressorStreamFactory COMPRESSOR_STREAM_FACTORY
+      = new CompressorStreamFactory();
 
   private static SwodlrSecurityProperties securityProperties;
 
@@ -124,7 +124,9 @@ public abstract class AbstractJweCookieStore implements Serializable {
         .build();
   }
 
-  protected static <T extends AbstractJweCookieStore> Optional<T> loadCookie(Class<T> clazz, HttpCookie cookie) {
+  protected static <T extends AbstractJweCookieStore> Optional<T> loadCookie(
+      Class<T> clazz, HttpCookie cookie
+  ) {
     JWEObject jweObject;
     try {
       jweObject = JWEObject.parse(cookie.getValue());
@@ -160,18 +162,20 @@ public abstract class AbstractJweCookieStore implements Serializable {
     return Optional.of(casted);
   }
 
-  protected static <T extends AbstractJweCookieStore> Mono<T> loadFromContext(Class<T> clazz, String cookieName) {
+  protected static <T extends AbstractJweCookieStore> Mono<T> loadFromContext(
+      Class<T> clazz, String cookieName
+  ) {
     return loadExchangeFromContext()
         .flatMap((exchange) -> {
           HttpCookie cookie = exchange.getRequest()
-            .getCookies().getFirst(cookieName);
+              .getCookies().getFirst(cookieName);
 
-            if (cookie == null) {
-              logger.warn("No cookie found: %s".formatted(cookieName));
-              return Mono.empty();
-            }
+          if (cookie == null) {
+            logger.warn("No cookie found: %s".formatted(cookieName));
+            return Mono.empty();
+          }
 
-            return Mono.justOrEmpty(loadCookie(clazz, cookie));
+          return Mono.justOrEmpty(loadCookie(clazz, cookie));
         });
   }
 
@@ -180,8 +184,8 @@ public abstract class AbstractJweCookieStore implements Serializable {
         .flatMap((exchange) -> {
           try {
             exchange
-              .getResponse()
-              .addCookie(obj.generateCookie());
+                .getResponse()
+                .addCookie(obj.generateCookie());
 
             return Mono.empty();
           } catch (JOSEException ex) {
