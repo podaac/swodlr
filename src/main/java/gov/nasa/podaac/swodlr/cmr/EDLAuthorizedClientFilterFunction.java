@@ -15,14 +15,16 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
 import reactor.core.publisher.Mono;
 
-public class EDLAuthorizedClientFilterFunction implements ExchangeFilterFunction {
+public class EdlAuthorizedClientFilterFunction implements ExchangeFilterFunction {
   private static final String CLIENT_REGISTRATION_ID = "edl";
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
   private ReactiveOAuth2AuthorizedClientManager authorizedClientManager;
 
-  public EDLAuthorizedClientFilterFunction(ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
+  public EdlAuthorizedClientFilterFunction(
+      ReactiveOAuth2AuthorizedClientManager authorizedClientManager
+  ) {
     this.authorizedClientManager = authorizedClientManager;
   }
 
@@ -32,8 +34,8 @@ public class EDLAuthorizedClientFilterFunction implements ExchangeFilterFunction
         .flatMap(context -> getAuthorizedClient(context))
         .flatMap((OAuth2AuthorizedClient authorizedClient) -> {
           ClientRequest newRequest = ClientRequest.from(request)
-            .attributes(oauth2AuthorizedClient(authorizedClient))
-            .build();
+              .attributes(oauth2AuthorizedClient(authorizedClient))
+              .build();
 
           return next.exchange(newRequest);
         })

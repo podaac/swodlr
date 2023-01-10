@@ -4,7 +4,6 @@ import gov.nasa.podaac.swodlr.Utils;
 import gov.nasa.podaac.swodlr.status.Status;
 import gov.nasa.podaac.swodlr.user.User;
 import gov.nasa.podaac.swodlr.user.UserReference;
-import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.graphql.data.method.annotation.ContextValue;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
+import reactor.core.publisher.Mono;
 
 @Controller
 public class L2RasterProductController {
@@ -42,12 +42,15 @@ public class L2RasterProductController {
   }
 
   @SchemaMapping(typeName = "User", field = "products")
-  public List<L2RasterProduct> getProductsForUser(@ContextValue User user, @Argument UUID after,
-      @Argument int limit) {
+  public List<L2RasterProduct> getProductsForUser(
+      @ContextValue UserReference userRef,
+      @Argument UUID after,
+      @Argument int limit
+  ) {
     if (after == null) {
       after = Utils.NULL_UUID;
     }
 
-    return l2RasterProductRepository.findByUser(user, after, limit);
+    return l2RasterProductRepository.findByUser(userRef.fetch(), after, limit);
   }
 }

@@ -5,7 +5,8 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientService;
 import reactor.core.publisher.Mono;
 
-public class JweCookieReactiveOAuth2AuthorizedClientService implements ReactiveOAuth2AuthorizedClientService {
+public class JweCookieReactiveOauth2AuthorizedClientService
+    implements ReactiveOAuth2AuthorizedClientService {
   @Override
   public Mono<OAuth2AuthorizedClient> loadAuthorizedClient(String clientRegistrationId,
       String principalName) {
@@ -16,13 +17,14 @@ public class JweCookieReactiveOAuth2AuthorizedClientService implements ReactiveO
   }
 
   @Override
-  public Mono<Void> saveAuthorizedClient(OAuth2AuthorizedClient authorizedClient, Authentication principal) {
+  public Mono<Void> saveAuthorizedClient(
+      OAuth2AuthorizedClient authorizedClient, Authentication principal
+  ) {
     return loadAuthorizedClientStore()
         .flatMap((authorizedClientStore) -> {
           authorizedClientStore.authorizedClients.put(
-            authorizedClient.getClientRegistration().getRegistrationId(),
-            authorizedClient
-          );
+              authorizedClient.getClientRegistration().getRegistrationId(),
+              authorizedClient);
           return authorizedClientStore.saveToContext();
         });
   }
