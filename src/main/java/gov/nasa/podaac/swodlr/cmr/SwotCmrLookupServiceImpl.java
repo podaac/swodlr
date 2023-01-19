@@ -123,15 +123,14 @@ public class SwotCmrLookupServiceImpl implements SwotCmrLookupService {
   private Map<String, Object> buildReqBody(
       final int cycle,
       final int pass,
-      final int scene
-  ) {
+      final int scene) {
     List<String> tiles = generateTileList(scene);
     Map<String, Object> baseParams = Map.ofEntries(
-      Map.entry("cycle", cycle),
-      Map.entry("passes", Map.ofEntries(
-        Map.entry("pass", pass),
-        Map.entry("tiles", tiles)
-      ))
+        Map.entry("cycle", cycle),
+        Map.entry("passes", Map.ofEntries(
+            Map.entry("pass", pass),
+            Map.entry("tiles", tiles)
+        ))
     );
 
     Map<String, Object> pixcParams = new HashMap<String, Object>(baseParams);
