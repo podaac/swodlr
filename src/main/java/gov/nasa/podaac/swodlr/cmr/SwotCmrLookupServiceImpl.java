@@ -123,10 +123,8 @@ public class SwotCmrLookupServiceImpl implements SwotCmrLookupService {
   private Map<String, Object> buildReqBody(
       final int cycle,
       final int pass,
-      final int scene) {
-    Map<String, Object> options = Map.ofEntries(
-        Map.entry("readableGranuleName", Collections.singletonMap("pattern", true)));
-
+      final int scene
+  ) {
     List<String> tiles = generateTileList(scene);
     Map<String, Object> baseParams = Map.ofEntries(
       Map.entry("cycle", cycle),
