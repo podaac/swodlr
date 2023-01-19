@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,11 +27,6 @@ import reactor.core.publisher.Mono;
 @Profile("!test")
 public class SwotCmrLookupServiceImpl implements SwotCmrLookupService {
   private static final List<String> ACCEPTED_FILE_EXTS = List.of("nc");
-
-  private static final Map<String, String> COLLECTION_PREFIXES = Map.ofEntries(
-      Map.entry("PIXC", "SWOT_L2_HR_PIXC"),
-      Map.entry("PIXCVec", "SWOT_L2_HR_PIXCVec"));
-
   private static final char[] SWATH_DIRECTIONS = new char[] { 'L', 'R' };
 
   private final ReactiveOAuth2AuthorizedClientManager authorizedClientManager;
@@ -112,16 +108,12 @@ public class SwotCmrLookupServiceImpl implements SwotCmrLookupService {
     return granules;
   }
 
-  private List<String> generateTileList(
-      final String prefix,
-      final int cycle,
-      final int pass,
-      final int scene) {
-    List<String> tiles = new ArrayList<>();
+  private List<String> generateTileList(final int scene) {
+    List<String> tiles = new ArrayList<>(8);
 
     for (int tile = scene + 1; tile <= scene + 4; tile++) {
       for (char direction : SWATH_DIRECTIONS) {
-        tiles.add("%s_%03d_%03d_%03d%c_*".formatted(prefix, cycle, pass, tile, direction));
+        tiles.add("%03d%c".formatted(tile, direction));
       }
     }
 
@@ -135,20 +127,23 @@ public class SwotCmrLookupServiceImpl implements SwotCmrLookupService {
     Map<String, Object> options = Map.ofEntries(
         Map.entry("readableGranuleName", Collections.singletonMap("pattern", true)));
 
-    List<String> pixcTileList = generateTileList(COLLECTION_PREFIXES.get("PIXC"),
-        cycle, pass, scene);
-    List<String> pixcVecTileList = generateTileList(COLLECTION_PREFIXES.get("PIXCVec"),
-        cycle, pass, scene);
+    List<String> tiles = generateTileList(scene);
+    Map<String, Object> baseParams = Map.ofEntries(
+      Map.entry("cycle", cycle),
+      Map.entry("passes", Map.ofEntries(
+        Map.entry("pass", pass),
+        Map.entry("tiles", tiles)
+      ))
+    );
 
-    Map<String, Object> pixcParams = Map.ofEntries(
-        Map.entry("collectionConceptId", cmrProperties.pixcConceptId),
-        Map.entry("readableGranuleName", pixcTileList),
-        Map.entry("options", options));
+    Map<String, Object> pixcParams = new HashMap<String, Object>(baseParams);
+    Map<String, Object> pixcVecParams = new HashMap<String, Object>(baseParams);
 
-    Map<String, Object> pixcVecParams = Map.ofEntries(
-        Map.entry("collectionConceptId", cmrProperties.pixcVecConceptId),
-        Map.entry("readableGranuleName", pixcVecTileList),
-        Map.entry("options", options));
+    pixcParams.put("collectionConceptId", cmrProperties.pixcConceptId);
+    pixcVecParams.put("collectionConceptId", cmrProperties.pixcVecConceptId);
+
+    pixcParams = Collections.unmodifiableMap(pixcParams);
+    pixcVecParams = Collections.unmodifiableMap(pixcVecParams);
 
     Map<String, Object> root = Map.ofEntries(
         Map.entry("pixcParams", pixcParams),
