@@ -108,29 +108,29 @@ public class SwotCmrLookupServiceImpl implements SwotCmrLookupService {
     return granules;
   }
 
-  private List<String> generateTileList(final int scene) {
-    List<String> tiles = new ArrayList<>(8);
+  private String generateTileList(final int scene) {
+    StringBuilder bob = new StringBuilder();
 
     for (int tile = scene + 1; tile <= scene + 4; tile++) {
       for (char direction : SWATH_DIRECTIONS) {
-        tiles.add("%03d%c".formatted(tile, direction));
+        bob.append("%03d%c,".formatted(tile, direction));
       }
     }
 
-    return Collections.unmodifiableList(tiles);
+    return bob.substring(0, bob.length() - 1);
   }
 
   private Map<String, Object> buildReqBody(
       final int cycle,
       final int pass,
       final int scene) {
-    List<String> tiles = generateTileList(scene);
+    String tiles = generateTileList(scene);
     Map<String, Object> baseParams = Map.ofEntries(
         Map.entry("cycle", cycle),
-        Map.entry("passes", Map.ofEntries(
+        Map.entry("passes", List.of(Map.ofEntries(
             Map.entry("pass", pass),
             Map.entry("tiles", tiles)
-        ))
+        )))
     );
 
     Map<String, Object> pixcParams = new HashMap<String, Object>(baseParams);
