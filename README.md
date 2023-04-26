@@ -2,6 +2,29 @@
 
 SWODLR (swaa·dler) is an open-source software system developed to generate custom Level 2 raster data products for the [SWOT mission](https://swot.jpl.nasa.gov/). It provides an Application Programming Interface (API) and Graphical User Interface (GUI) that allows end-users to provide custom configurations to generate on-demand raster data products from underlying standard data products (PIXC, PIXCVec).
 
+## Related Repositories
+
+SWODLR is a collection of various services deployed to an Amazon Web Services (AWS) environment. Development on the individual components of the system is handled within each respective repository. Planning and documentation for the system as a whole is concentrated in this repository.
+
+Component repositories:
+- https://github.com/podaac/swodlr-ui
+- https://github.com/podaac/swodlr-api
+- https://github.com/podaac/swodlr-ingest-to-sds
+- https://github.com/podaac/swodlr-raster-create
+- https://github.com/podaac/swodlr-db-models
+- https://github.com/podaac/swodlr-functional-tests
+- https://github.com/podaac/swodlr-data-nao
+
+## Background
+
+The SWOT Algorithm Development Team (ADT) developed the capability to generate raster products on-demand from underlying standard data products (PIXC, PIXCVec). In order to maintain a consistent end product, a second copy of the SWOT Science Data System (SDS) hosts the on-demand product generation capability. This system interfaces with the PO.DAAC-hosted swodlr system and end-users to provide a seamless experience.
+
+The L2_HR_Raster Standard Data Products (SDPs) are available for all HR data collected by KaRIn. The SDPs are generated as NetCDF files with the following characteristics:
+
+- Universal Transverse Mercator (UTM) projection grid
+- 128 km x 128 km non-overlapping granule sizes
+- Provided at each of 100 m and 250 m resolutions
+
 ## Inputs
 
 The following inputs can be provided by the user:
@@ -15,29 +38,6 @@ The following inputs can be provided by the user:
 - UTM zone adjust: This parameter allows the UTM grid to use a zone within +/-1 zone of the closest zone to the center of the raster scene in order to allow nearby L2_HR_Raster outputs to be sampled on a common grid. This parameter has no effect if the output grid is not UTM.
 
 - MGRS band adjust: This parameter allows the UTM grid to use a Military Grid Reference System (MGRS) latitude band within +/-1 band of the closest band to the center of the raster scene in order to allow nearby L2_HR_Raster outputs to be sampled on a common grid. This parameter has no effect if the output grid is not UTM.
-
-## Background
-
-The SWOT Algorithm Development Team (ADT) developed the capability to generate raster products on-demand from underlying standard data products (PIXC, PIXCVec). In order to maintain a consistent end product, a second copy of the SWOT Science Data System (SDS) hosts the on-demand product generation capability. This system interfaces with the PO.DAAC-hosted swodlr system and end-users to provide a seamless experience.
-
-The L2_HR_Raster Standard Data Products (SDPs) are available for all HR data collected by KaRIn. The SDPs are generated as NetCDF files with the following characteristics:
-
-- Universal Transverse Mercator (UTM) projection grid
-- 128 km x 128 km non-overlapping granule sizes
-- Provided at each of 100 m and 250 m resolutions
-
-## Related Repositories
-
-SWODLR is a collection of various services deployed to an Amazon Web Services (AWS) environment. Development on the individual components of the system is handled within each respective repository. Planning and documentation for the system as a whole is concentrated in this repository.
-
-Component repositories:
-- https://github.com/podaac/swodlr-ui
-- https://github.com/podaac/swodlr-api
-- https://github.com/podaac/swodlr-ingest-to-sds
-- https://github.com/podaac/swodlr-raster-create
-- https://github.com/podaac/swodlr-db-models
-- https://github.com/podaac/swodlr-functional-tests
-- https://github.com/podaac/swodlr-data-nao
 
 ## License
 
