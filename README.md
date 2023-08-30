@@ -7,13 +7,18 @@ SWODLR (swaa·dler) is an open-source software system developed to generate cust
 SWODLR is a collection of various services deployed to an Amazon Web Services (AWS) environment. Development on the individual components of the system is handled within each respective repository. Planning and documentation for the system as a whole is concentrated in this repository.
 
 Component repositories:
-- https://github.com/podaac/swodlr-ui
 - https://github.com/podaac/swodlr-api
-- https://github.com/podaac/swodlr-ingest-to-sds
-- https://github.com/podaac/swodlr-raster-create
+- https://github.com/podaac/swodlr-async-update
+- https://github.com/podaac/swodlr-bootstrap
+- https://github.com/podaac/swodlr-common-js
+- https://github.com/podaac/swodlr-data-nao
 - https://github.com/podaac/swodlr-db-models
 - https://github.com/podaac/swodlr-functional-tests
-- https://github.com/podaac/swodlr-data-nao
+- https://github.com/podaac/swodlr-ingest-to-sds
+- https://github.com/podaac/swodlr-raster-create
+- https://github.com/podaac/swodlr-schemas
+- https://github.com/podaac/swodlr-ui
+- https://github.com/podaac/swodlr-user-notify
 
 ## Background
 
