@@ -15,6 +15,7 @@ Deployable Components:
 - https://github.com/podaac/swodlr-user-notify
 
 Libraries:
+- https://github.com/podaac/swodlr-common-py
 - https://github.com/podaac/swodlr-bootstrap
 - https://github.com/podaac/swodlr-common-js
 - https://github.com/podaac/swodlr-db-models
