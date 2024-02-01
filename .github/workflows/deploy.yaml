@@ -34,9 +34,8 @@ jobs:
         run: |
           SUBMODULE_NAME="swodlr-user-notify"
           echo "SUBMODULE_NAME=$SUBMODULE_NAME">>$GITHUB_ENV
-          ls -al
           cd $SUBMODULE_NAME
-          GITHUB_LONG_HASH=$(github rev-parse HEAD)
+          GITHUB_LONG_HASH=$(git rev-parse HEAD)
           echo "GITHUB_LONG_HASH=$GITHUB_LONG_HASH">>$GITHUB_ENV
           VERSION=$(cat bumpver.toml|grep current_version |grep -v {version} |sed -E "s/current_version = //"|sed -E "s/\"//g")
           echo "SUBMODULE_VERSION=$VERSION">>$GITHUB_ENV
