@@ -17,18 +17,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Trigger Workflow in Another Repository
-      run: |
-        # Set the required variables
-        repo_owner="podaac" 
-        repo_name="swodler-user-notify"  
-        event_type="trigger-workflow" 
-        venue=${{ github.event.inputs.venue }}"
+      - uses: getsentry/action-github-app-token@v2
+        name: my-app-install token
+        id: podaac-cicd
+        with:
+          app_id: ${{ secrets.CICD_APP_ID }}
+          private_key: ${{ secrets.CICD_APP_PRIVATE_KEY }}
+      - name: Trigger Workflow in Another Repository
+        run: |
+          # Set the required variables
+          repo_owner="podaac" 
+          repo_name="swodler-user-notify"  
+          event_type="trigger-workflow" 
+          venue=${{ github.event.inputs.venue }}"
 
-        curl -L \
-            -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.PAT }}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
-            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"venue\": \"$venue\", \"unit\": false, \"integration\": true}}"
+          curl -L \
+              -X POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ steps.podaac-cicd.outputs.token }}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
+              -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"venue\": \"$venue\", \"unit\": false, \"integration\": true}}"
