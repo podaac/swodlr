@@ -39,7 +39,7 @@ jobs:
           VERSION=$(cat bumpver.toml|grep current_version |grep -v {version} |sed -E "s/current_version = //"|sed -E "s/\"//g")
           echo "SUBMODULE_VERSION=$VERSION">>$GITHUB_ENV
           
-      - name: Trigger deploy of ${{ env.SUBMODULE_NAME}} version ${{ SUBMODULE_VERSION }} [${{ GITHUB_LONG_HASH }}] to ${{ env.VENUE }}
+      - name: Trigger deploy of ${{ env.SUBMODULE_NAME}} version ${{ env.SUBMODULE_VERSION }} [${{ env.GITHUB_LONG_HASH }}] to ${{ env.VENUE }}
         run: |
           # Set the required variables
           repo_owner="${{ env.PROJECT_NAME }}" 
