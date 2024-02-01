@@ -29,7 +29,7 @@ jobs:
           repo_owner="podaac" 
           repo_name="swodler-user-notify"  
           event_type="trigger-workflow" 
-          venue=${{ github.event.inputs.venue }}"
+          venue="${{ github.event.inputs.venue }}"
 
           curl -L \
               -X POST \
