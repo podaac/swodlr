@@ -35,8 +35,9 @@ jobs:
           SUBMODULE_NAME="swodlr-user-notify"
           echo "SUBMODULE_NAME=$SUBMODULE_NAME">>$GITHUB_ENV
           GITHUB_LONG_HASH=$(git submodule status|grep $SUBMODULE_NAME|sed -E "s/ swodlr.*//" |sed -E "s/ //g")
+          echo "Github Hash for submodule: $GITHUB_LONG_HASH"
           echo "GITHUB_LONG_HASH=$GITHUB_LONG_HASH">>$GITHUB_ENV
-          VERSION=$(cat bumpver.toml|grep current_version |grep -v {version} |sed -E "s/current_version = //"|sed -E "s/\"//g" |sed -E "s/-//g")
+          VERSION=$(cat bumpver.toml|grep current_version |grep -v {version} |sed -E "s/current_version = //"|sed -E "s/\"//g")
           echo "SUBMODULE_VERSION=$VERSION">>$GITHUB_ENV
           
       - name: Trigger deploy of ${{ env.SUBMODULE_NAME}} version ${{ env.SUBMODULE_VERSION }} [${{ env.GITHUB_LONG_HASH }}] to ${{ env.VENUE }}
