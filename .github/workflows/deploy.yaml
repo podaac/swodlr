@@ -33,6 +33,7 @@ jobs:
         run: |
           SUBMODULE_NAME="swodlr-user-notify"
           echo "SUBMODULE_NAME=$SUBMODULE_NAME">>$GITHUB_ENV
+          ls -al
           cd $SUBMODULE_NAME
           GITHUB_LONG_HASH=$(github rev-parse HEAD)
           echo "GITHUB_LONG_HASH=$GITHUB_LONG_HASH">>$GITHUB_ENV
