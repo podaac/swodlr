@@ -31,7 +31,7 @@ jobs:
       # Determine the submodule version and hash
       - name: Determine Submodule Hash
         run: |
-          SUBMODULE_NAME="swodlr_user_notify"
+          SUBMODULE_NAME="swodlr-user-notify"
           echo "SUBMODULE_NAME=$SUBMODULE_NAME">>$GITHUB_ENV
           cd $SUBMODULE_NAME
           GITHUB_LONG_HASH=$(github rev-parse HEAD)
