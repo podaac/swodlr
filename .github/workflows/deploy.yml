@@ -1,0 +1,34 @@
+name: Swodlr Deployment
+
+on:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      venue:
+        type: choice
+        description: Venue to deploy to
+        options:
+          - SIT
+          - UAT
+  
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Trigger Workflow in Another Repository
+      run: |
+        # Set the required variables
+        repo_owner="podaac" 
+        repo_name="swodler-user-notify"  
+        event_type="trigger-workflow" 
+        venue=${{ github.event.inputs.venue }}"
+
+        curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.PAT }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
+            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"venue\": \"$venue\", \"unit\": false, \"integration\": true}}"

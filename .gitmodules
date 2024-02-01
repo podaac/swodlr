@@ -1,0 +1,18 @@
+[submodule "swodlr-api"]
+	path = swodlr-api
+	url = https://github.com/podaac/swodlr-api.git
+[submodule "swodlr-ui"]
+	path = swodlr-ui
+	url = https://github.com/podaac/swodlr-ui.git
+[submodule "swodlr-async-update"]
+	path = swodlr-async-update
+	url = https://github.com/podaac/swodlr-async-update.git
+[submodule "swodlr-ingest-to-sds"]
+	path = swodlr-ingest-to-sds
+	url = https://github.com/podaac/swodlr-ingest-to-sds.git
+[submodule "swodlr-raster-create"]
+	path = swodlr-raster-create
+	url = https://github.com/podaac/swodlr-raster-create.git
+[submodule "swodlr-user-notify"]
+	path = swodlr-user-notify
+	url = https://github.com/podaac/swodlr-user-notify.git
