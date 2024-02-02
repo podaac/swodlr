@@ -52,4 +52,4 @@ jobs:
               -H "Authorization: Bearer ${{ steps.podaac-cicd.outputs.token }}" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
               https://api.github.com/repos/$repo_owner/$repo_name/actions/workflows/build.yml/dispatches \
-              -d '{"ref":"${{ env.GITHUB_LONG_HASH }}","inputs":{"venue":"${{ env.VENUE }}"}}'
+              -d '{"ref":"develop","inputs":{"venue":"${{ env.VENUE }}"}}'
