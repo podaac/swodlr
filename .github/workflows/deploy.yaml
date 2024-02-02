@@ -37,6 +37,7 @@ jobs:
           GITHUB_LONG_HASH=$(git submodule status|grep $SUBMODULE_NAME|sed -E "s/ swodlr.*//" |sed -E "s/ //g"|sed -E "s/^-//")
           echo "GITHUB_LONG_HASH=$GITHUB_LONG_HASH">>$GITHUB_ENV
           cd $SUBMODULE_NAME
+          ls -al
           VERSION=$(cat bumpver.toml|grep current_version |grep -v {version} |sed -E "s/current_version = //"|sed -E "s/\"//g")
           echo "SUBMODULE_VERSION=$VERSION">>$GITHUB_ENV
           
