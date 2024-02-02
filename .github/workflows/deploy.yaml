@@ -101,7 +101,7 @@ jobs:
       ## swodlr-ingest-to-sds
       - name: Determine Submodule Hash
         run: |
-          SUBMODULE_NAME="swodlr-intest-to-sds"
+          SUBMODULE_NAME="swodlr-ingest-to-sds"
           echo "SUBMODULE_NAME=$SUBMODULE_NAME">>$GITHUB_ENV
           GITHUB_LONG_HASH=$(git submodule status|grep $SUBMODULE_NAME|sed -E "s/ swodlr.*//" |sed -E "s/ //g"|sed -E "s/^-//")
           echo "GITHUB_LONG_HASH=$GITHUB_LONG_HASH">>$GITHUB_ENV
