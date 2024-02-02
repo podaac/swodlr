@@ -28,6 +28,9 @@ jobs:
           echo "VENUE=${{ github.event.inputs.venue }}">>$GITHUB_ENV
           echo "PROJECT_NAME=podaac">>$GITHUB_ENV
       - uses: actions/checkout@v4
+      - name: Update submodules
+        run: |
+          git submodule update --init
 
       # Determine the submodule version and hash
       - name: Determine Submodule Hash
@@ -38,7 +41,6 @@ jobs:
           echo "GITHUB_LONG_HASH=$GITHUB_LONG_HASH">>$GITHUB_ENV
           ls -al
           cd $SUBMODULE_NAME
-          git pull origin $GITHUB_LONG_HASH
           pwd
           ls -al
           VERSION=$(cat bumpver.toml|grep current_version |grep -v {version} |sed -E "s/current_version = //"|sed -E "s/\"//g")
