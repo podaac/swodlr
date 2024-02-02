@@ -38,6 +38,7 @@ jobs:
           echo "GITHUB_LONG_HASH=$GITHUB_LONG_HASH">>$GITHUB_ENV
           ls -al
           cd $SUBMODULE_NAME
+          git pull origin $GITHUB_LONG_HASH
           pwd
           ls -al
           VERSION=$(cat bumpver.toml|grep current_version |grep -v {version} |sed -E "s/current_version = //"|sed -E "s/\"//g")
