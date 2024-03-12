@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SWODLR_SOURCE_REPO: cbanh/swodlr-ui
+      SWODLR_SOURCE_REPO: podaac/swodlr-ui
       VENUE: ${{ github.event.inputs.venue }}
       SOURCE_BRANCH: ${{ github.event.inputs.source_branch }}
       TARGET_BRANCH: ${{ github.event.inputs.target_branch }}
