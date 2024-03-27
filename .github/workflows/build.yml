@@ -296,7 +296,6 @@ jobs:
             fi
 
       - name: Append text to file (${{ env.SWODLR_SOURCE_REPO }})
-        if: env.NEW_BRANCH == 'true'
         run: |
             echo "${{ env.SWODLR_SOURCE_REPO }} deployment ${{ github.event.inputs.commit }}" >> CHANGE
             git add CHANGE
