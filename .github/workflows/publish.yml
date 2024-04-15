@@ -7,7 +7,6 @@ on:
         type: choice
         description: Venue to deploy to
         options:
-            - SIT
             - UAT
             - OPS
       version:
