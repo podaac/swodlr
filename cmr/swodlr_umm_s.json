@@ -22,7 +22,7 @@
             "Type": "GET DATA"
         },
         {
-            "URL": "https://swodlr.podaac.earthdatacloud.nasa.gov/api",
+            "URL": "https://swodlr.podaac.earthdatacloud.nasa.gov/api/graphql",
             "Description": "SWODLR API endpoint.",
             "URLContentType": "DistributionURL",
             "Format": "JSON",
