@@ -10,6 +10,8 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'bumpver.toml'
+      - 'cmr/**'
+      - '.github/worfklows/publish.yml'
 
 
   # For manual build/deployment
