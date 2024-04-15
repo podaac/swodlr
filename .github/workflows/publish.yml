@@ -1,0 +1,85 @@
+name: Publish UMM-S Record
+
+on:
+  workflow_dispatch:
+    inputs:
+      venue:
+        type: choice
+        description: Venue to deploy to
+        options:
+            - SIT
+            - UAT
+            - OPS
+      version:
+        type: string
+        description: SWODLR UMM-S record version
+      record_base_url:
+        type: string
+        description: Base URL for SWODLR
+        default: "https://swodlr.podaac.earthdatacloud.nasa.gov"
+
+jobs:
+  publish:
+    name: Publish UMM-S Record
+    runs-on: ubuntu-latest
+
+    env:
+      VENUE: ${{ github.event.inputs.venue }}
+      VERSION: ${{ github.event.inputs.version }}
+      RECORD_BASE_URL: ${{ github.event.inputs.record_base_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+
+      - name: set environment vars
+        id: lowercase
+        run: |
+          echo TARGET_ENV_LOWERCASE=${{ env.VENUE }} | tr '[:upper:]' '[:lower:]' >> "$GITHUB_OUTPUT"
+      
+      - name: Publish UMM-S with new version
+        id: publish-umm-s
+        uses: podaac/cmr-umm-updater@0.7.1
+        env:
+          LAUNCHPAD_TOKEN_SIT: ${{secrets.LAUNCHPAD_TOKEN_SIT}}
+          LAUNCHPAD_TOKEN_UAT: ${{secrets.LAUNCHPAD_TOKEN_UAT}}
+          LAUNCHPAD_TOKEN_OPS: ${{secrets.LAUNCHPAD_TOKEN_OPS}}
+        with:
+          umm-json: 'cmr/swodlr_umm_s.json'
+          provider: 'POCLOUD'
+          env: ${{ steps.lowercase.outputs.TARGET_ENV_LOWERCASE }}
+          version: ${{ env.VERSION }}
+          timeout: 60
+          disable_removal: 'true'
+          umm_type: 'umm-s'
+          use_associations: 'true'
+          umm_version: 1.5.2
+          url_value: ${{ env.RECORD_BASE_URL }}
+        continue-on-error: true
+
+      - name: Wait to retry publishing UMM-S
+        if: steps.publish-umm-s.outcome == 'failure'
+        run: |
+          sleep 120
+          
+      - name: Publish UMM-S with new version retry
+        id: publish-umm-s-retry
+        uses: podaac/cmr-umm-updater@0.7.1
+        if: |
+          steps.publish-umm-s.outcome == 'failure'
+        with:
+          umm-json: 'cmr/swodlr_umm_s.json'
+          provider: 'POCLOUD'
+          env: ${{ steps.lowercase.outputs.TARGET_ENV_LOWERCASE }}
+          version: ${{ env.VERSION }}
+          timeout: 60
+          disable_removal: 'true'
+          umm_type: 'umm-s'
+          use_associations: 'false'
+          umm_version: 1.5.2
+          url_value: ${{ env.RECORD_BASE_URL }}
+        env:
+          LAUNCHPAD_TOKEN_SIT: ${{secrets.LAUNCHPAD_TOKEN_SIT}}
+          LAUNCHPAD_TOKEN_UAT: ${{secrets.LAUNCHPAD_TOKEN_UAT}}
+          LAUNCHPAD_TOKEN_OPS: ${{secrets.LAUNCHPAD_TOKEN_OPS}}
