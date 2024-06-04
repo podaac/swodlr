@@ -53,7 +53,7 @@ jobs:
           disable_removal: 'true'
           umm_type: 'umm-s'
           use_associations: 'true'
-          umm_version: 1.5.2
+          umm_version: 1.5.3
           url_value: ${{ env.RECORD_BASE_URL }}
         continue-on-error: true
 
@@ -76,7 +76,7 @@ jobs:
           disable_removal: 'true'
           umm_type: 'umm-s'
           use_associations: 'false'
-          umm_version: 1.5.2
+          umm_version: 1.5.3
           url_value: ${{ env.RECORD_BASE_URL }}
         env:
           LAUNCHPAD_TOKEN_SIT: ${{secrets.LAUNCHPAD_TOKEN_SIT}}
