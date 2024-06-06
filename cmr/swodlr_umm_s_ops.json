@@ -1,0 +1,95 @@
+{
+    "Name": "PODAAC_SWODLR",
+    "LongName": "PODAAC SWOT On-Demand Level 2 Raster Generation (SWODLR)",
+    "Type": "SWODLR",
+    "Version": "*replaced by CICD*",
+    "VersionDescription": "Version of software deployed",
+    "URL": {
+        "Description": "Service top-level URL",
+        "URLValue": "*replaced by CICD*"
+    },
+    "RelatedURLs": [
+        {
+            "URL": "https://swodlr.podaac.earthdatacloud.nasa.gov/about",
+            "Description": "SWODLR Documentation",
+            "URLContentType": "PublicationURL",
+            "Type": "VIEW RELATED INFORMATION"
+        },
+        {
+            "URL": "https://swodlr.podaac.earthdatacloud.nasa.gov",
+            "Description": "SWODLR UI endpoint.",
+            "URLContentType": "DistributionURL",
+            "Type": "GET DATA"
+        },
+        {
+            "URL": "https://swodlr.podaac.earthdatacloud.nasa.gov/api/graphql",
+            "Description": "SWODLR API endpoint.",
+            "URLContentType": "DistributionURL",
+            "Format": "JSON",
+            "Type": "USE SERVICE API",
+            "MimeType": "application/json"
+        }
+    ],
+    "Description": "SWODLR is an open-source software system developed to generate custom Level 2 raster data products for the SWOT mission.",
+    "ServiceKeywords": [
+        {
+            "ServiceCategory": "EARTH SCIENCE SERVICES",
+            "ServiceTopic": "DATA MANAGEMENT/DATA HANDLING",
+            "ServiceTerm": "DATA CUSTOMIZATION"
+        }
+    ],
+    "ServiceOrganizations": [
+        {
+            "Roles": [
+                "ORIGINATOR"
+            ],
+            "ShortName": "NASA/JPL/PODAAC",
+            "LongName": "Physical Oceanography Distributed Active Archive Center, Jet Propulsion Laboratory, NASA"
+            
+        }
+    ],
+    "ContactGroups":[
+        {
+            "Roles": [
+                "SERVICE PROVIDER",
+                "SOFTWARE AUTHOR"
+            ],
+            "GroupName": "NASA/JPL/PODAAC",
+            "ContactInformation": {
+                "OnlineResources": [
+                    {
+                        "Description": "Data Contact URL",
+                        "Name": "HOME PAGE",
+                        "Linkage": "https://podaac.jpl.nasa.gov/"
+                    }
+                ],
+                "ContactMechanisms": [
+                    {
+                        "Type": "Email",
+                        "Value": "podaac@podaac.jpl.nasa.gov"
+                    },
+                    {
+                        "Type": "Other",
+                        "Value": "https://github.com/podaac/swodlr/issues"
+                    }
+                ]
+            }
+        }
+    ],
+    "AccessConstraints": "Earthdata login user authentication is required to use this service.",
+    "ServiceOptions": {
+        "SupportedOutputProjections": [
+            {
+                "ProjectionName": "Universal Transverse Mercator"
+            },
+            {
+                "ProjectionName": "WGS84 - World Geodetic System 1984"
+            }
+        ]
+    },
+    "MetadataSpecification": {
+        "URL": "https://cdn.earthdata.nasa.gov/umm/service/v1.5.2",
+        "Name": "UMM-S",
+        "Version": "1.5.2"
+    }
+}

@@ -1,7 +1,7 @@
 {
     "Name": "PODAAC_SWODLR",
     "LongName": "PODAAC SWOT On-Demand Level 2 Raster Generation (SWODLR)",
-    "Type": "WEB SERVICES",
+    "Type": "SWODLR",
     "Version": "*replaced by CICD*",
     "VersionDescription": "Version of software deployed",
     "URL": {
@@ -10,19 +10,19 @@
     },
     "RelatedURLs": [
         {
-            "URL": "https://swodlr.podaac.earthdatacloud.nasa.gov/about",
+            "URL": "https://swodlr.podaac.uat.earthdatacloud.nasa.gov/about",
             "Description": "SWODLR Documentation",
             "URLContentType": "PublicationURL",
             "Type": "VIEW RELATED INFORMATION"
         },
         {
-            "URL": "https://swodlr.podaac.earthdatacloud.nasa.gov",
+            "URL": "https://swodlr.podaac.uat.earthdatacloud.nasa.gov",
             "Description": "SWODLR UI endpoint.",
             "URLContentType": "DistributionURL",
             "Type": "GET DATA"
         },
         {
-            "URL": "https://swodlr.podaac.earthdatacloud.nasa.gov/api/graphql",
+            "URL": "https://swodlr.podaac.uat.earthdatacloud.nasa.gov/api/graphql",
             "Description": "SWODLR API endpoint.",
             "URLContentType": "DistributionURL",
             "Format": "JSON",
