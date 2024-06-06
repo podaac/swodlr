@@ -1,7 +1,7 @@
 {
     "Name": "PODAAC_SWODLR",
     "LongName": "PODAAC SWOT On-Demand Level 2 Raster Generation (SWODLR)",
-    "Type": "WEB SERVICES",
+    "Type": "SWODLR",
     "Version": "*replaced by CICD*",
     "VersionDescription": "Version of software deployed",
     "URL": {
