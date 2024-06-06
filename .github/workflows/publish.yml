@@ -50,7 +50,7 @@ jobs:
           LAUNCHPAD_TOKEN_UAT: ${{secrets.LAUNCHPAD_TOKEN_UAT}}
           LAUNCHPAD_TOKEN_OPS: ${{secrets.LAUNCHPAD_TOKEN_OPS}}
         with:
-          umm-json: format('cmr/swodlr_umm_s_{0}.json', ${{ steps.lowercase.outputs.TARGET_ENV_LOWERCASE }})
+          umm-json: 'cmr/swodlr_umm_s_${{ steps.lowercase.outputs.TARGET_ENV_LOWERCASE }}.json'
           provider: 'POCLOUD'
           env: ${{ steps.lowercase.outputs.TARGET_ENV_LOWERCASE }}
           version: ${{ env.VERSION }}
