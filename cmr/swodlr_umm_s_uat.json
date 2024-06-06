@@ -88,8 +88,8 @@
         ]
     },
     "MetadataSpecification": {
-        "URL": "https://cdn.earthdata.nasa.gov/umm/service/v1.5.2",
+        "URL": "https://cdn.earthdata.nasa.gov/umm/service/v1.5.3",
         "Name": "UMM-S",
-        "Version": "1.5.2"
+        "Version": "1.5.3"
     }
 }
