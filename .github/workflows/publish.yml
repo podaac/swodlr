@@ -40,7 +40,7 @@ jobs:
       - name: rename associations file
         id: rename
         run: |
-          cp cmr/${{ steps.lowercase.outputs.TARGET_ENV_LOWERCASE }}-associations.txt cmr/associations.txt
+          cp cmr/${{ steps.lowercase.outputs.TARGET_ENV_LOWERCASE }}_associations.txt cmr/associations.txt
       
       - name: Publish UMM-S with new version
         id: publish-umm-s
