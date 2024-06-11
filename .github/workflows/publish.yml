@@ -73,14 +73,14 @@ jobs:
         if: |
           steps.publish-umm-s.outcome == 'failure'
         with:
-          umm-json: 'cmr/swodlr_umm_s.json'
+          umm-json: 'cmr/swodlr_umm_s_${{ steps.lowercase.outputs.TARGET_ENV_LOWERCASE }}.json'
           provider: 'POCLOUD'
           env: ${{ steps.lowercase.outputs.TARGET_ENV_LOWERCASE }}
           version: ${{ env.VERSION }}
           timeout: 60
           disable_removal: 'true'
           umm_type: 'umm-s'
-          use_associations: 'false'
+          use_associations: 'true'
           umm_version: 1.5.3
           url_value: ${{ env.RECORD_BASE_URL }}
         env:
