@@ -22,6 +22,7 @@ Libraries:
 - https://github.com/podaac/swodlr-schemas
 
 Other:
+- https://github.com/podaac/swodlr-cli
 - https://github.com/podaac/swodlr-functional-tests
 - https://github.com/podaac/swodlr-data-nao (potentially obsolete)
   
